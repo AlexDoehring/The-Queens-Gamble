@@ -13,8 +13,11 @@ class Upgrade:
         return False
     
     def effect(self):
-        if self.name == "Luck":
-            return 0.05 * self.level
+        match(self.name):
+            case "Luck":
+                return 0.05 * self.level
+            case "Bounty":
+                return 0.5 * self.level
         
     def getName(self):
         return self.name
