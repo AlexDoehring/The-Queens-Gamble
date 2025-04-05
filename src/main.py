@@ -28,8 +28,8 @@ class Main:
         game = self.game
         board = self.game.board
         dragger = self.game.dragger
-        total_time = 0
-        frame_count = 0
+        # total_time = 0    USED FOR FPS CALCULATION
+        # frame_count = 0   USED FOR FPS CALCULATION
         while True:
             screen.fill((0, 0, 0))
             game.show_side_panels(screen)
@@ -116,13 +116,14 @@ class Main:
                     sys.exit()
 
             pygame.display.update()
-            frame_time = time.time() - start_time
-            total_time += frame_time
-            frame_count += 1
+            # FPS calculation
+            # frame_time = time.time() - start_time
+            # total_time += frame_time
+            # frame_count += 1
 
             # Print every 60 frames (~once per second)
-            if frame_count % 60 == 0:
-                print(f"Average frame time: {total_time / frame_count:.4f} seconds ({1000 * total_time / frame_count:.2f} ms)")
+            # if frame_count % 60 == 0:
+            #    print(f"Average frame time: {total_time / frame_count:.4f} seconds ({1000 * total_time / frame_count:.2f} ms)")
 
             self.clock.tick(60)  # Cap FPS at 120
 
