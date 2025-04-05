@@ -2,12 +2,61 @@ import pygame
 import sys
 from blackjack import BlackjackGame
 import random
+from blackjack_ui import BlackjackUI
 
 from const import *
 from game import Game
 from square import Square
 from move import Move
 import time
+
+def run_blackjack_ui(screen, player_card=None, dealer_card=None):
+    bj_game = BlackjackGame()
+    ui = BlackjackUI()
+    bj_game.start_round(player_card, dealer_card)
+    ui.update_hands(bj_game.player_hand.cards, bj_game.dealer_hand.cards)
+
+    phase = 'player'
+    winner = None
+
+    while True:
+        screen.fill((0, 100, 0))
+        ui.draw(screen)
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if ui.hit_button.collidepoint(event.pos) and phase == 'player':
+                    bj_game.player_hand.add_card(bj_game.deck.draw())
+                    ui.update_hands(bj_game.player_hand.cards, bj_game.dealer_hand.cards)
+                    if bj_game.player_hand.get_value() > 21:
+                        winner = 'dealer'
+                        phase = 'done'
+
+                elif ui.stand_button.collidepoint(event.pos) and phase == 'player':
+                    while bj_game.dealer_hand.get_value() < 17:
+                        bj_game.dealer_hand.add_card(bj_game.deck.draw())
+                    ui.update_hands(bj_game.player_hand.cards, bj_game.dealer_hand.cards)
+
+                    player_total = bj_game.player_hand.get_value()
+                    dealer_total = bj_game.dealer_hand.get_value()
+
+                    if dealer_total > 21 or player_total > dealer_total:
+                        winner = 'player'
+                    elif dealer_total > player_total:
+                        winner = 'dealer'
+                    else:
+                        winner = 'push'
+                    phase = 'done'
+
+        if phase == 'done':
+            pygame.time.wait(1000)
+            return winner
+
 
 class Main:
 
@@ -17,6 +66,8 @@ class Main:
         pygame.display.set_caption('Chess')
         self.game = Game()
         self.clock = pygame.time.Clock()  # Limit FPS
+
+    
 
     def show_game_over_screen(self, winner):
         font = pygame.font.SysFont('monospace', 48, bold=True)
@@ -140,8 +191,8 @@ class Main:
                                 if captured_piece and captured_piece.color == 'black':
                                     print(f"You are about to capture a {captured_piece.name}. Let's play Blackjack first!")
 
-                                    bj = BlackjackGame()
-                                    result = bj.play_round()
+                                    result = run_blackjack_ui(self.screen, player_card=None, dealer_card=None)
+
 
                                     print(f"Blackjack result: {result}")
 
