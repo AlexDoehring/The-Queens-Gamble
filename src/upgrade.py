@@ -2,7 +2,6 @@ class Upgrade:
     def __init__(self, name: str, description: str, cost: int):
         self.name = name
         self.description = description
-        self.effect = None
         self.cost = cost
         self.level = 0
         self.max_level = 5
@@ -12,6 +11,13 @@ class Upgrade:
             self.level += 1
             return True
         return False
+    
+    def effect(self):
+        match(self.name):
+            case "Luck":
+                return 0.05 * self.level
+            case "Bounty":
+                return 0.5 * self.level
         
     def getName(self):
         return self.name
