@@ -40,6 +40,7 @@ class Main:
             for event in pygame.event.get():
                 # Let blackjack panel handle its own input
                 game.blackjack_ui.handle_event(event)  # Handle blackjack UI events
+                game.shop.handle_event(event)  # Handle shop UI events
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     dragger.update_mouse(event.pos)

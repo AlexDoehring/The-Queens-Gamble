@@ -5,8 +5,7 @@ from powerup import PowerUp
 from const import *
 
 class Shop:
-    def __init__(self, money=0):
-        self.money = money
+    def __init__(self):
         self.upgrades = [
             Upgrade("Luck", "decreases opponents chance of capturing a piece", 5),
             Upgrade("Bounty", "increases reward of each piece's capture", 10)
@@ -32,35 +31,13 @@ class Shop:
     def change_availability(self):
         self.available = not self.available
         
-
-class ShopHandler:
-    def __init__(self, money=0):
-        self.money = money
-        
-    def handle_event(self, event): #CHANGE
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.input_box.collidepoint(event.pos):
-                self.active_input = True
-            else:
-                self.active_input = False
-
-            if self.hit_button.collidepoint(event.pos):
-                print("Hit pressed")
-
-            if self.stand_button.collidepoint(event.pos):
-                print("Stand pressed")
-
-        if event.type == pygame.KEYDOWN and self.active_input:
-            if event.key == pygame.K_BACKSPACE:
-                self.bet_amount = self.bet_amount[:-1]
-            elif event.unicode.isdigit() or (event.unicode == "." and "." not in self.bet_amount):
-                self.bet_amount += event.unicode
                 
 class ShopUI:
-    def __init__(self, money=0):
+    def __init__(self, money):
+        self.shop = Shop()
+        self.upgrade_buttons = []
+        self.powerup_buttons = []
         self.money = money
-        self.shop = Shop(self.money)
-        self.shop_handler = ShopHandler(self.money)
         
     def draw(self, surface):
         right_panel_x = SIDE_PANEL_WIDTH + BOARD_WIDTH
@@ -87,6 +64,30 @@ class ShopUI:
             surface.blit(level_text, (right_panel_x + 200, 200 + self.shop.available_upgrades().index(upgrade) * 40))
             surface.blit(upgrade_text, (right_panel_x + 20, 200 + self.shop.available_upgrades().index(upgrade) * 40))
             left_button_rect = pygame.Rect(right_panel_x + 15, 195 + self.shop.available_upgrades().index(upgrade) * 40, SIDE_PANEL_WIDTH - 230, 35)
+            self.upgrade_buttons.append(left_button_rect)
+            
             right_button_rect = pygame.Rect(right_panel_x + 190, 195 + self.shop.available_upgrades().index(upgrade) * 40, SIDE_PANEL_WIDTH - 230, 35)
             pygame.draw.rect(surface, (255, 255, 255), left_button_rect, width=2, border_radius=5)
             pygame.draw.rect(surface, (255, 255, 255), right_button_rect, width=2, border_radius=5)
+            
+    
+    def handle_event(self, event, money):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            for i in range(len(self.shop.available_upgrades())):
+                button = self.upgrade_buttons[i]
+                upgrade = self.shop.available_upgrades()[i]
+                if button.collidepoint(event.pos):
+                    if money >= upgrade.cost:
+                        money -= upgrade.cost
+                        upgrade.level += 1
+                        print(f"Purchased {upgrade.name}. New level: {upgrade.level}. Remaining money: {self.money}")
+                    else:
+                        print(f"Not enough money to purchase {upgrade.name}.")
+
+        if event.type == pygame.KEYDOWN and hasattr(self, 'active_input') and self.active_input:
+            if event.key == pygame.K_BACKSPACE:
+                self.bet_amount = self.bet_amount[:-1]
+            elif event.unicode.isdigit() or (event.unicode == "." and "." not in self.bet_amount):
+                self.bet_amount += event.unicode
+                
+        return money

@@ -21,8 +21,8 @@ class Game:
         self.board = Board()
         self.dragger = Dragger()
         self.config = Config()
-        self.shop = ShopUI()
         self.money = 0
+        self.shop = ShopUI(self.money)
         self.ai = ChessAI(self.board)
         self.game_over = False
         self.blackjack_ui = BlackjackUI()
@@ -121,10 +121,6 @@ class Game:
 
         # THEN draw the Blackjack panel (which includes the image)
         self.blackjack_ui.draw(surface)
-
-        right_panel_x = SIDE_PANEL_WIDTH + BOARD_WIDTH
-        right_panel = pygame.Rect(right_panel_x, 0, SIDE_PANEL_WIDTH, HEIGHT)
-        pygame.draw.rect(surface, (60, 60, 60), right_panel)
 
         title_font = pygame.font.SysFont('monospace', 36, bold=True)  # Larger font for the title
         
