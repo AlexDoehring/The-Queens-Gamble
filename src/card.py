@@ -5,8 +5,11 @@ class Card:
 
     def getSuit(self):
         return self._suit
-
+    
     def getRank(self):
+        return self._rank
+
+    def getValue(self):
         match self._rank:
             case "Ace":
                 return 1
