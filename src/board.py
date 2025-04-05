@@ -59,6 +59,9 @@ class Board:
 
     def valid_move(self, piece, move):
         return move in piece.moves
+    
+    #def valid_moves_2(self, piece, move):
+        #if move in valid_move(piece,move):
 
     def check_promotion(self, piece, final):
         if final.row == 0 or final.row == 7:
@@ -454,3 +457,44 @@ class Board:
 
         # king
         self.squares[row_other][4] = Square(row_other, 4, King(color))
+
+    def get_all_legal_moves(self, color):
+        moves = []
+        for row in range(ROWS):
+            for col in range(COLS):
+                piece = self.squares[row][col].piece
+                if piece and piece.color == color:
+                    self.calc_moves(piece, row, col)
+                    for move in piece.moves:
+                        if self.squares[row][col].has_enemy_piece(piece.color):
+                            pass
+                        else:
+                            moves.append((piece, move))
+        return moves 
+    
+    def get_all_legal_moves(self, color):
+        moves = []
+        for row in range(ROWS):
+            for col in range(COLS):
+                piece = self.squares[row][col].piece
+                if piece and piece.color == color:
+                    self.calc_moves(piece, row, col)
+                    for move in piece.moves:
+                        target_square = self.squares[move.final.row][move.final.col]
+                        if not target_square.has_piece() or target_square.has_enemy_piece(color):
+                            moves.append((piece, move))
+        return moves
+
+
+    
+    def copy(self):
+        return copy.deepcopy(self)
+
+
+    def simulate_move(self, piece, move):
+        new_board = self.copy()
+        r, c = move.initial.row, move.initial.col
+        # Find corresponding piece in new_board
+        new_piece = new_board.squares[r][c].piece
+        new_board.move(new_piece, move, testing=True)
+        return new_board

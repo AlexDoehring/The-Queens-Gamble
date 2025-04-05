@@ -1,9 +1,71 @@
 import random
+from piece import Piece
+import copy 
 
 class ChessAI:
-    def __init__(self, board):
+    def __init__(self, board, depth = 1):
+        self.depth = depth
         self.board = board
+        #self.game = game
+        #self.piece = Piece()
 
+
+    def evaluate(self, board, maximizing_color):
+        score = 0
+        for row in board.squares:
+            for square in row:
+                if square.has_piece():
+                    piece = square.piece
+                    value = piece.value
+
+                    # add a bonus for controling the center of the board
+                    if (3 <= square.row <=4) and (3 <= square.col <=4):
+                        value += 0.1
+
+                        
+                    if piece.color == maximizing_color:
+                        score += value
+                    else:
+                        score -= value
+        return score
+
+    def minimax(self, board, depth, maximizing):
+        if depth == 0:
+            return self.evaluate(board, 'black'), None
+    
+        best_move = None
+        if maximizing:
+            max_eval = float('-inf')
+            legal_moves = board.get_all_legal_moves('black' if maximizing else 'white')
+            for piece, move in legal_moves:
+                if board.valid_move(piece, move):
+                    new_state = board.simulate_move(piece,move)
+                    eval, _ = self.minimax(new_state, depth - 1, not maximizing)
+                    if eval > max_eval:
+                        max_eval = eval
+                        best_move = (piece, move)
+            return max_eval, best_move
+        else:
+            min_eval = float('inf')
+            legal_moves = board.get_all_legal_moves('black' if maximizing else 'white')
+            for piece, move in legal_moves:
+                if board.valid_move(piece, move):
+                    new_state = board.simulate_move(piece,move)
+                    eval, _ = self.minimax(new_state, depth - 1, not maximizing)
+                    if eval < min_eval:
+                        min_eval = eval
+                        best_move = (piece, move)
+            return min_eval, best_move
+
+
+    def get_move(self, state):
+        """Returns the best move from the current game state."""
+        _, move = self.minimax(state, self.depth, maximizing = True)
+        return move    
+    
+
+    
+    """
     def get_random_move(self):
         squares = self.board.squares
         black_pieces = []
@@ -22,5 +84,9 @@ class ChessAI:
             legal_moves = piece.moves
             if legal_moves:
                 return piece, random.choice(legal_moves)
+            
+
+        
 
         return None, None
+    """
