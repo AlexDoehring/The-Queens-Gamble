@@ -186,22 +186,9 @@ class Main:
                                             dragger = game.dragger     
                                     else:
                                         prob = random.random()
-                                        print(f"I WANT TO CAPTURE; Prob: {prob}")
+                                        print(f"I WANT TO CAPTURE")
                                         num = 1 if prob <= piece.prob else 0
                                         print(f"Piece: {piece.name}, pieceProb: {piece.prob}, actProb: {prob} Num: {num}")
-                                        # match (piece.name):
-                                            # case ('pawn'):
-                                            #     num = 1 if prob <= 0.39 else 0
-                                            # case ('bishop'):
-                                            #     num = 1 if prob <= 0.40 else 0
-                                            # case ('knight'):
-                                            #     num = 1 if prob <= 0.40 else 0
-                                            # case ('rook'):
-                                            #     num = 1 if prob <= 0.45 else 0
-                                            # case ('queen'):
-                                            #     num = 1 if prob <= 0.55 else 0
-                                            # case ('king'):
-                                            #     num = 1 if prob <= 0.65 else 0
                                         print(f'num: {num}')
                                         if num == 1:
                                             board.move(piece, move)
