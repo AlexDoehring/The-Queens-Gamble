@@ -141,7 +141,7 @@ class Main:
             for event in pygame.event.get():
                 # Let blackjack panel handle its own input
                 game.shop.handle_event(event)  # Handle shop UI events
-                game.update_money()  # Update money in the shop
+                game.update_game_money()  # Update money in the shop
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     dragger.update_mouse(event.pos)
@@ -206,6 +206,8 @@ class Main:
                                         game.play_sound(captured)
                                         game.next_turn()
                                         game.check_king_capture()
+                                        print(f"Bounty for piece captured: {captured_piece.bounty}")
+                                        game.add_money(captured_piece.bounty)
 
                                 else:
                                     board.move(dragger.piece, move)
