@@ -4,6 +4,14 @@ class Upgrade:
         self.description = description
         self.effect = None
         self.cost = cost
+        self.level = 0
+        self.max_level = 5
+        
+    def increase_level(self):
+        if self.level < self.max_level:
+            self.level += 1
+            return True
+        return False
         
     def getName(self):
         return self.name
