@@ -14,8 +14,16 @@ class Shop:
             PowerUp("Skip", "allows you to skip the opponent's turn", 15)
         ]
         
+        self.available = True
+        
     def available_upgrades(self):
         return self.upgrades
     
     def available_powerups(self):
         return self.powerups
+    
+    def is_available(self):
+        return self.available 
+    
+    def change_availability(self):
+        self.available = not self.available
