@@ -108,6 +108,9 @@ class ShopUI:
     def get_money(self):
         return self.money
     
+    def set_money(self, money):
+        self.money = money
+    
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             for i in range(len(self.shop.available_upgrades())):

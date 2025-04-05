@@ -118,10 +118,16 @@ class Game:
         surface.blit(blackjack_text, (20, 20))
 
         self.shop.draw(surface)
+    
+    
+    def add_money(self, amount):
+        self.money += amount
+        self.update_shop_money()
 
-        
+    def update_shop_money(self):
+        self.shop.set_money(self.money)
             
-    def update_money(self):
+    def update_game_money(self):
         self.money = self.shop.get_money()
     
     def get_luck(self):

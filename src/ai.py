@@ -19,8 +19,8 @@ class ChessAI:
                     value = piece.value
 
                     # add a bonus for controling the center of the board
-                    if (3 <= square.row <=4) and (3 <= square.col <=4):
-                        value += 0.1
+                    if (2 <= square.row <=5) and (2 <= square.col <=5):
+                        value += 0.15
 
                         
                     if piece.color == maximizing_color:
