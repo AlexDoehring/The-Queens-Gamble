@@ -121,7 +121,7 @@ class Game:
         pygame.draw.line(surface, (255, 255, 255), (right_panel_x + 20, 70), (right_panel_x + SIDE_PANEL_WIDTH - 20, 70), 2)
         surface.blit(balance_text, (right_panel_x + 20, 80))
         surface.blit(upgrades_title, (right_panel_x + 20, 140))
-        pygame.draw.line(surface, (255, 255, 255), (right_panel_x + 20, 170), (right_panel_x + SIDE_PANEL_WIDTH - 20, 170), 2)
+        pygame.draw.line(surface, (255, 255, 255), (right_panel_x + 20, 180), (right_panel_x + SIDE_PANEL_WIDTH - 20, 180), 2)
 
     def next_turn(self):
         self.next_player = 'white' if self.next_player == 'black' else 'black'
