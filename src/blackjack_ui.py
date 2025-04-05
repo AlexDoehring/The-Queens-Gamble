@@ -15,11 +15,15 @@ class BlackjackUI:
         self.player_hand = []
         self.dealer_hand = []
 
+        self.dealer_y = 300
+        self.player_y = 440
+        self.card_spacing = 30
+
         # Eye positions
         self.eye_left_center = (155, 112)
         self.eye_right_center = (242, 112)
         self.eye_radius = 20
-        self.pupil_radius = 8
+        self.pupil_radius = 10
 
         # Button state
         self.hit_pressed = False
@@ -33,6 +37,14 @@ class BlackjackUI:
         except Exception as e:
             print("Failed to load dealer image:", e)
             self.dealer_img = None
+
+        try:
+            deck_path = os.path.join("assets", "images", "blackjack", "deck.png")
+            self.deck_img = pygame.image.load(deck_path)
+            self.deck_img = pygame.transform.scale(self.deck_img, (130, 140))
+        except Exception as e:
+            print("Failed to load deck image:", e)
+            self.deck_img = None
 
         try:
             self.hit_img_rest = pygame.image.load(os.path.join("assets", "images", "blackjack", "hit_rest.png")).convert_alpha()
@@ -67,14 +79,37 @@ class BlackjackUI:
     def set_bet_amount(self, amount):
         self.bet_amount = amount
 
+    def render_card(self, screen, card, x, y):
+        rect = pygame.Rect(x, y, 70, 105)
+        pygame.draw.rect(screen, (255, 255, 255), rect, border_radius=6)
+        pygame.draw.rect(screen, (0, 0, 0), rect, 2, border_radius=6)
+
+        rank = card.getRank()
+        suit = card.getSuit()
+        suit_symbols = {
+            "Hearts": "♥",
+            "Diamonds": "♦",
+            "Clubs": "♣",
+            "Spades": "♠"
+        }
+        symbol = suit_symbols.get(suit, "?")
+        label = f"{rank[0]}{symbol}" if rank != "10" else f"10{symbol}"
+
+        color = (200, 0, 0) if suit in ["Hearts", "Diamonds"] else (0, 0, 0)
+        text = self.font.render(label, True, color)
+        screen.blit(text, (rect.x + 8, rect.y + 10))
+
     def draw(self, screen):
         if self.dealer_img:
             screen.blit(self.dealer_img, (-10, 0))
 
-        # Draw eyes that follow the cursor
+        if self.deck_img:
+            #Image size is 70x105, so we need to adjust the position accordingly
+            # Want to edit size of the image to fit the screen
+            screen.blit(self.deck_img, (265, self.dealer_y + 95))  # Rough position near dealer cards
+
         mouse_x, mouse_y = pygame.mouse.get_pos()
         for center in [self.eye_left_center, self.eye_right_center]:
-            # pygame.draw.circle(screen, (255, 255, 255), center, self.eye_radius)
             dx = mouse_x - center[0]
             dy = mouse_y - center[1]
             dist = max((dx**2 + dy**2) ** 0.5, 1)
@@ -85,18 +120,10 @@ class BlackjackUI:
             pygame.draw.circle(screen, (0, 0, 0), pupil_pos, self.pupil_radius)
 
         for i, card in enumerate(self.dealer_hand):
-            rect = pygame.Rect(100 + i * 35, 120, 60, 90)
-            pygame.draw.rect(screen, (255, 255, 255), rect)
-            pygame.draw.rect(screen, (0, 0, 0), rect, 2)
-            text = self.font.render(str(card.getRank()[0]), True, (0, 0, 0))
-            screen.blit(text, (rect.x + 5, rect.y + 5))
+            self.render_card(screen, card, 80 + i * self.card_spacing, self.dealer_y)
 
         for i, card in enumerate(self.player_hand):
-            rect = pygame.Rect(100 + i * 35, 250, 60, 90)
-            pygame.draw.rect(screen, (255, 255, 255), rect)
-            pygame.draw.rect(screen, (0, 0, 0), rect, 2)
-            text = self.font.render(str(card.getRank()[0]), True, (0, 0, 0))
-            screen.blit(text, (rect.x + 5, rect.y + 5))
+            self.render_card(screen, card, 80 + i * self.card_spacing, self.player_y)
 
         if self.bet_img:
             screen.blit(self.bet_img, self.bet_box.topleft)
