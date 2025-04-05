@@ -2,7 +2,7 @@
 
 **A chess-based strategy game with a blackjack twist.**  
 Capture pieces by playing blackjack, earn currency, and upgrade your odds.  
-Built during [Hackathon Name] in 36 hours.
+Built during HackKU 2025 in 36 hours.
 
 ---
 
@@ -74,3 +74,7 @@ Brett Suhr – Game Design / Logic
 
 
 Colin Treanor – Backend / Integration
+
+## 💖 Special Thanks
+Huge thank you to the HackKU 2025 organizers, mentors, and volunteers for putting together an incredible event and creating the space for innovation and (not-so) friendly competition. Your work made this all possible — we appreciate you!
+
