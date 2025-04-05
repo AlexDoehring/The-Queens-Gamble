@@ -10,7 +10,8 @@ from piece import King
 from shop import ShopUI
 from upgrade import Upgrade
 from powerup import PowerUp
-
+from blackjack_ui import BlackjackUI
+from blackjack import BlackjackGame
 
 class Game:
 
@@ -24,8 +25,7 @@ class Game:
         self.shop = ShopUI(self.money)
         self.ai = ChessAI(self.board)
         self.game_over = False
-
-
+        self.blackjack_ui = BlackjackUI()
 
         # Preload textures once
         self.texture_cache = {}
@@ -106,18 +106,19 @@ class Game:
             pygame.draw.rect(surface, color, rect, width=3)
 
     def show_side_panels(self, surface):
-        # Draw the background first
         left_panel = pygame.Rect(0, 0, SIDE_PANEL_WIDTH, HEIGHT)
         pygame.draw.rect(surface, (30, 30, 30), left_panel)
 
-        # THEN draw the Blackjack panel (which includes the image)
+        # Draw the Blackjack UI panel
+        self.blackjack_ui.draw(surface)
 
-        title_font = pygame.font.SysFont('monospace', 36, bold=True)  # Larger font for the title
-        
+        # Title
+        title_font = pygame.font.SysFont('monospace', 36, bold=True)
         blackjack_text = title_font.render("Blackjack", True, (255, 255, 255))
         surface.blit(blackjack_text, (20, 20))
-        
+
         self.shop.draw(surface)
+
         
             
     def update_money(self):
