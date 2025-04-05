@@ -38,6 +38,7 @@ class ShopUI:
         self.upgrade_buttons = []
         self.powerup_buttons = []
         self.money = money
+        self.buttons_pressed = [False for _ in range(len(self.shop.available_upgrades()))]
         
         try:
             image_path = os.path.join("assets", "images", "shop", "button.png")
@@ -46,7 +47,8 @@ class ShopUI:
             image_path = os.path.join("assets", "images", "shop", "buttonPressed.png")
             self.button_pressed_img = pygame.image.load(image_path)
             self.button_pressed_img = pygame.transform.scale(self.button_pressed_img, (SIDE_PANEL_WIDTH - 220, 38))
-            self.isPressed = False
+            self.luckPressed = False
+            self.bountyPressed = False
         except Exception as e:
             print("Failed to load shop buttons:", e)
             self.dealer_img = None
@@ -55,7 +57,7 @@ class ShopUI:
         right_panel_x = SIDE_PANEL_WIDTH + BOARD_WIDTH
         right_panel = pygame.Rect(right_panel_x, 0, SIDE_PANEL_WIDTH, HEIGHT)
         pygame.draw.rect(surface, (60, 60, 60), right_panel)
-        font = pygame.font.SysFont('monospace', 24)
+        font = pygame.font.SysFont('monospace', 24, bold=True)
         title_font = pygame.font.SysFont('monospace', 36, bold=True)  # Larger font for the title
         subtitle_font = pygame.font.SysFont('monospace', 28, bold=True)
         
@@ -71,12 +73,12 @@ class ShopUI:
         pygame.draw.line(surface, (255, 255, 255), (right_panel_x + 20, 180), (right_panel_x + SIDE_PANEL_WIDTH - 20, 180), 2)
         
         for upgrade in self.shop.available_upgrades():
-            if self.button_img and not self.isPressed:
-                surface.blit(self.button_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 40))
-            elif self.button_pressed_img and self.isPressed:
-                surface.blit(self.button_pressed_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 40))                
-            upgrade_text = font.render(f"{upgrade.name}: ${upgrade.cost}", True, (255, 255, 255))
-            level_text = font.render(f"Level: {upgrade.level}", True, (255, 255, 255))
+            if self.button_pressed_img and self.buttons_pressed[self.shop.available_upgrades().index(upgrade)]:
+                surface.blit(self.button_pressed_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 40))  
+            elif self.button_img:
+                surface.blit(self.button_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 40))              
+            upgrade_text = font.render(f"{upgrade.name}: ${upgrade.cost}", True, (9, 48, 78))
+            level_text = font.render(f"Level: {upgrade.level}", True, (247, 163, 19))
             surface.blit(level_text, (right_panel_x + 200, 200 + self.shop.available_upgrades().index(upgrade) * 40))
             surface.blit(upgrade_text, (right_panel_x + 20, 200 + self.shop.available_upgrades().index(upgrade) * 40))
             left_button_rect = pygame.Rect(right_panel_x + 15, 195 + self.shop.available_upgrades().index(upgrade) * 40, SIDE_PANEL_WIDTH - 230, 35)
@@ -91,11 +93,11 @@ class ShopUI:
     
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
-            self.isPressed = True
             for i in range(len(self.shop.available_upgrades())):
                 button = self.upgrade_buttons[i]
                 upgrade = self.shop.available_upgrades()[i]
                 if button.collidepoint(event.pos):
+                    self.buttons_pressed[i] = True
                     if upgrade.level == 5:
                         print(f"{upgrade.name} is already at max level.")
                     elif self.money >= upgrade.cost:
@@ -104,12 +106,7 @@ class ShopUI:
                         print(f"Purchased {upgrade.name}. New level: {upgrade.level}. Remaining money: {self.money}")
                     else:
                         print(f"Not enough money to purchase {upgrade.name}.")
-
-        if event.type == pygame.KEYDOWN and hasattr(self, 'active_input') and self.active_input:
-            if event.key == pygame.K_BACKSPACE:
-                self.bet_amount = self.bet_amount[:-1]
-            elif event.unicode.isdigit() or (event.unicode == "." and "." not in self.bet_amount):
-                self.bet_amount += event.unicode
         
         if event.type == pygame.MOUSEBUTTONUP:
-            self.isPressed = False
+            for i in range(len(self.buttons_pressed)):
+                self.buttons_pressed[i] = False
