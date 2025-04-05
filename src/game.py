@@ -12,6 +12,7 @@ from upgrade import Upgrade
 from powerup import PowerUp
 from blackjack_ui import BlackjackUI
 from blackjack import BlackjackGame
+from card import Card
 
 class Game:
 
@@ -29,6 +30,12 @@ class Game:
 
         # Preload textures once
         self.texture_cache = {}
+
+        # Inject sample cards for testing visuals
+        mock_player = [Card("Hearts", "King"), Card("Spades", "Five"), Card("Diamonds", "Queen")]
+        mock_dealer = [Card("Diamonds", "Ace"), Card("Clubs", "Seven"), Card("Hearts", "Jack")]
+
+        self.blackjack_ui.update_hands(mock_player, mock_dealer)
 
     def load_texture(self, path):
         if path not in self.texture_cache:
