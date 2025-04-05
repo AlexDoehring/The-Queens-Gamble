@@ -16,6 +16,54 @@ class Main:
         self.game = Game()
         self.clock = pygame.time.Clock()  # Limit FPS
 
+    def show_game_over_screen(self, winner):
+        font = pygame.font.SysFont('monospace', 48, bold=True)
+        small_font = pygame.font.SysFont('monospace', 36)
+        screen = self.screen
+        overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+        overlay.fill((15, 90, 120, 180))  # black with 70% opacity
+
+
+        while True:
+
+            screen.blit(overlay, (0, 0))
+            message = f"{winner.capitalize()} Wins!"
+            msg_text = font.render(message, True, (255, 255, 255))
+            play_again_text = small_font.render("Play Again", True, (0, 0, 0))
+            exit_text = small_font.render("Exit", True, (0, 0, 0))
+
+            play_again_rect = pygame.Rect(WIDTH // 2 - 125, HEIGHT // 2, 250, 50)
+            exit_rect = pygame.Rect(WIDTH // 2 - 125, HEIGHT // 2 + 70, 250, 50)
+
+            pygame.draw.rect(screen, (255, 255, 255), play_again_rect)
+            pygame.draw.rect(screen, (255, 255, 255), exit_rect)
+
+            screen.blit(msg_text, (WIDTH // 2 - msg_text.get_width() // 2, HEIGHT // 2 - 100))
+            screen.blit(play_again_text, (
+                play_again_rect.centerx - play_again_text.get_width() // 2,
+                play_again_rect.centery - play_again_text.get_height() // 2
+            ))
+            screen.blit(exit_text, (
+                exit_rect.centerx - exit_text.get_width() // 2,
+                exit_rect.centery - exit_text.get_height() // 2
+            ))
+
+
+            pygame.display.update()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if play_again_rect.collidepoint(event.pos):
+                        self.game.reset()
+                        return  # resume mainloop
+                    elif exit_rect.collidepoint(event.pos):
+                        pygame.quit()
+                        sys.exit()
+
+
     def mainloop(self):
         # start_time = time.time()
 
@@ -91,7 +139,11 @@ class Main:
                                 game.check_king_capture()
                                 if game.game_over:
                                     dragger.undrag_piece()
-                                    return
+                                    winner = 'white' if game.next_player == 'black' else 'black'
+                                    self.show_game_over_screen(winner)
+                                    game = self.game
+                                    board = game.board
+                                    dragger = game.dragger
 
                             if game.next_player == 'black':
                                 piece, move = game.ai.get_random_move()
@@ -104,7 +156,11 @@ class Main:
                                     game.check_king_capture()
                                     if game.game_over:
                                         dragger.undrag_piece()
-                                        return
+                                        winner = 'white' if game.next_player == 'black' else 'black'
+                                        self.show_game_over_screen(winner)
+                                        game = self.game
+                                        board = game.board
+                                        dragger = game.dragger
                     
                     dragger.undrag_piece()
 
