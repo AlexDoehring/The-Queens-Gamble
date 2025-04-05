@@ -80,18 +80,18 @@ class Board:
         piece.en_passant = True
 
     def in_check(self, piece, move):
-        temp_piece = copy.deepcopy(piece)
-        temp_board = copy.deepcopy(self)
-        temp_board.move(temp_piece, move, testing=True)
+        # temp_piece = copy.deepcopy(piece)
+        # temp_board = copy.deepcopy(self)
+        # temp_board.move(temp_piece, move, testing=True)
         
-        for row in range(ROWS):
-            for col in range(COLS):
-                if temp_board.squares[row][col].has_enemy_piece(piece.color):
-                    p = temp_board.squares[row][col].piece
-                    temp_board.calc_moves(p, row, col, bool=False)
-                    for m in p.moves:
-                        if isinstance(m.final.piece, King):
-                            return True
+        # for row in range(ROWS):
+        #     for col in range(COLS):
+        #         if temp_board.squares[row][col].has_enemy_piece(piece.color):
+        #             p = temp_board.squares[row][col].piece
+        #             temp_board.calc_moves(p, row, col, bool=False)
+        #             for m in p.moves:
+        #                 if isinstance(m.final.piece, King):
+        #                     return True
         
         return False
 

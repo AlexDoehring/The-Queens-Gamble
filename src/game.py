@@ -6,6 +6,7 @@ from dragger import Dragger
 from config import Config
 from square import Square
 from ai import ChessAI
+from piece import King
 
 class Game:
 
@@ -16,6 +17,8 @@ class Game:
         self.dragger = Dragger()
         self.config = Config()
         self.ai = ChessAI(self.board)
+        self.game_over = False
+
 
         # Preload textures once
         self.texture_cache = {}
@@ -127,3 +130,14 @@ class Game:
 
     def reset(self):
         self.__init__()
+
+    def check_king_capture(self):
+        king_count = 0
+        for row in self.board.squares:
+            for square in row:
+                if isinstance(square.piece, King):
+                    king_count += 1
+        if king_count < 2:
+            print("Game Over! A king has been captured.")
+            self.game_over = True
+
