@@ -32,6 +32,13 @@ class Game:
         if path not in self.texture_cache:
             self.texture_cache[path] = pygame.image.load(path)
         return self.texture_cache[path]
+    
+    def Buttonify(Picture, coords, surface):
+        image = pygame.image.load(Picture)
+        imagerect = image.get_rect()
+        imagerect.topright = coords
+        surface.blit(image,imagerect)
+        return (image,imagerect)
 
     # blit methods
 
