@@ -17,95 +17,98 @@ class Game:
         self.config = Config()
         self.ai = ChessAI(self.board)
 
+        # Preload textures once
+        self.texture_cache = {}
+
+    def load_texture(self, path):
+        if path not in self.texture_cache:
+            self.texture_cache[path] = pygame.image.load(path)
+        return self.texture_cache[path]
+
     # blit methods
 
     def show_bg(self, surface):
         theme = self.config.theme
-        
+        x_offset = SIDE_PANEL_WIDTH
+
         for row in range(ROWS):
             for col in range(COLS):
-                # color
                 color = theme.bg.light if (row + col) % 2 == 0 else theme.bg.dark
-                # rect
-                rect = (col * SQSIZE, row * SQSIZE, SQSIZE, SQSIZE)
-                # blit
+                rect = (col * SQSIZE + x_offset, row * SQSIZE, SQSIZE, SQSIZE)
                 pygame.draw.rect(surface, color, rect)
 
-                # row coordinates
                 if col == 0:
-                    # color
                     color = theme.bg.dark if row % 2 == 0 else theme.bg.light
-                    # label
                     lbl = self.config.font.render(str(ROWS-row), 1, color)
                     lbl_pos = (5, 5 + row * SQSIZE)
-                    # blit
                     surface.blit(lbl, lbl_pos)
 
-                # col coordinates
                 if row == 7:
-                    # color
                     color = theme.bg.dark if (row + col) % 2 == 0 else theme.bg.light
-                    # label
                     lbl = self.config.font.render(Square.get_alphacol(col), 1, color)
-                    lbl_pos = (col * SQSIZE + SQSIZE - 20, HEIGHT - 20)
-                    # blit
+                    lbl_pos = (col * SQSIZE + x_offset + SQSIZE - 20, HEIGHT - 20)
                     surface.blit(lbl, lbl_pos)
 
     def show_pieces(self, surface):
+        x_offset = SIDE_PANEL_WIDTH
         for row in range(ROWS):
             for col in range(COLS):
-                # piece ?
                 if self.board.squares[row][col].has_piece():
                     piece = self.board.squares[row][col].piece
-                    
-                    # all pieces except dragger piece
                     if piece is not self.dragger.piece:
                         piece.set_texture(size=80)
-                        img = pygame.image.load(piece.texture)
-                        img_center = col * SQSIZE + SQSIZE // 2, row * SQSIZE + SQSIZE // 2
+                        img = self.load_texture(piece.texture)
+                        img_center = col * SQSIZE + x_offset + SQSIZE // 2, row * SQSIZE + SQSIZE // 2
                         piece.texture_rect = img.get_rect(center=img_center)
                         surface.blit(img, piece.texture_rect)
 
     def show_moves(self, surface):
         theme = self.config.theme
+        x_offset = SIDE_PANEL_WIDTH
 
         if self.dragger.dragging:
             piece = self.dragger.piece
 
-            # loop all valid moves
             for move in piece.moves:
-                # color
                 color = theme.moves.light if (move.final.row + move.final.col) % 2 == 0 else theme.moves.dark
-                # rect
-                rect = (move.final.col * SQSIZE, move.final.row * SQSIZE, SQSIZE, SQSIZE)
-                # blit
+                rect = (move.final.col * SQSIZE + x_offset, move.final.row * SQSIZE, SQSIZE, SQSIZE)
                 pygame.draw.rect(surface, color, rect)
 
     def show_last_move(self, surface):
         theme = self.config.theme
+        x_offset = SIDE_PANEL_WIDTH
 
         if self.board.last_move:
             initial = self.board.last_move.initial
             final = self.board.last_move.final
 
             for pos in [initial, final]:
-                # color
                 color = theme.trace.light if (pos.row + pos.col) % 2 == 0 else theme.trace.dark
-                # rect
-                rect = (pos.col * SQSIZE, pos.row * SQSIZE, SQSIZE, SQSIZE)
-                # blit
+                rect = (pos.col * SQSIZE + x_offset, pos.row * SQSIZE, SQSIZE, SQSIZE)
                 pygame.draw.rect(surface, color, rect)
 
     def show_hover(self, surface):
+        x_offset = SIDE_PANEL_WIDTH
+
         if self.hovered_sqr:
-            # color
             color = (180, 180, 180)
-            # rect
-            rect = (self.hovered_sqr.col * SQSIZE, self.hovered_sqr.row * SQSIZE, SQSIZE, SQSIZE)
-            # blit
+            rect = (self.hovered_sqr.col * SQSIZE + x_offset, self.hovered_sqr.row * SQSIZE, SQSIZE, SQSIZE)
             pygame.draw.rect(surface, color, rect, width=3)
 
-    # other methods
+    def show_side_panels(self, surface):
+        left_panel = pygame.Rect(0, 0, SIDE_PANEL_WIDTH, HEIGHT)
+        pygame.draw.rect(surface, (30, 30, 30), left_panel)
+
+        right_panel_x = SIDE_PANEL_WIDTH + BOARD_WIDTH
+        right_panel = pygame.Rect(right_panel_x, 0, SIDE_PANEL_WIDTH, HEIGHT)
+        pygame.draw.rect(surface, (60, 60, 60), right_panel)
+
+        font = self.config.font
+        blackjack_text = font.render("Blackjack", True, (255, 255, 255))
+        shop_text = font.render("Shop", True, (255, 255, 255))
+
+        surface.blit(blackjack_text, (20, 20))
+        surface.blit(shop_text, (right_panel_x + 20, 20))
 
     def next_turn(self):
         self.next_player = 'white' if self.next_player == 'black' else 'black'
