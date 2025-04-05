@@ -16,10 +16,10 @@ class BlackjackUI:
         self.dealer_hand = []
 
         # Eye positions
-        self.eye_left_center = (60, 90)
-        self.eye_right_center = (140, 90)
+        self.eye_left_center = (155, 112)
+        self.eye_right_center = (242, 112)
         self.eye_radius = 20
-        self.pupil_radius = 7
+        self.pupil_radius = 8
 
         # Button state
         self.hit_pressed = False
@@ -74,7 +74,7 @@ class BlackjackUI:
         # Draw eyes that follow the cursor
         mouse_x, mouse_y = pygame.mouse.get_pos()
         for center in [self.eye_left_center, self.eye_right_center]:
-            pygame.draw.circle(screen, (255, 255, 255), center, self.eye_radius)
+            # pygame.draw.circle(screen, (255, 255, 255), center, self.eye_radius)
             dx = mouse_x - center[0]
             dy = mouse_y - center[1]
             dist = max((dx**2 + dy**2) ** 0.5, 1)
