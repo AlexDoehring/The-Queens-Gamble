@@ -89,15 +89,23 @@ class Main:
                                 board.set_true_en_passant(dragger.piece)
                                 game.play_sound(captured)
                                 game.next_turn()
+                                game.check_king_capture()
+                                if game.game_over:
+                                    dragger.undrag_piece()
+                                    return
 
-                                if game.next_player == 'black':
-                                    piece, move = game.ai.get_random_move()
-                                    if piece and move:
-                                        captured = board.squares[move.final.row][move.final.col].has_piece()
-                                        board.move(piece, move)
-                                        board.set_true_en_passant(piece)
-                                        game.play_sound(captured)
-                                        game.next_turn()
+                            if game.next_player == 'black':
+                                piece, move = game.ai.get_random_move()
+                                if piece and move:
+                                    captured = board.squares[move.final.row][move.final.col].has_piece()
+                                    board.move(piece, move)
+                                    board.set_true_en_passant(piece)
+                                    game.play_sound(captured)
+                                    game.next_turn()
+                                    game.check_king_capture()
+                                    if game.game_over:
+                                        dragger.undrag_piece()
+                                        return
                     
                     dragger.undrag_piece()
 
