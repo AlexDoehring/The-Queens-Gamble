@@ -1,7 +1,7 @@
 import pygame
 import sys
 from blackjack import BlackjackGame
-
+import random
 
 from const import *
 from game import Game
@@ -166,21 +166,58 @@ class Main:
                                     print("AI has no valid moves")
                                 else:
                                     piece, move = move_result
-                                    
+                                
+
+                                num = 0
                                 if piece and move:
                                     captured = board.squares[move.final.row][move.final.col].has_piece()
-                                    board.move(piece, move)
-                                    board.set_true_en_passant(piece)
-                                    game.play_sound(captured)
-                                    game.next_turn()
-                                    game.check_king_capture()
-                                    if game.game_over:
-                                        dragger.undrag_piece()
-                                        winner = 'white' if game.next_player == 'black' else 'black'
-                                        self.show_game_over_screen(winner)
-                                        game = self.game
-                                        board = game.board
-                                        dragger = game.dragger
+                                    if not captured:
+                                        board.move(piece, move)
+                                        board.set_true_en_passant(piece)
+                                        game.play_sound(captured)
+                                        game.next_turn()
+                                        game.check_king_capture()
+                                        if game.game_over:
+                                            dragger.undrag_piece()
+                                            winner = 'white' if game.next_player == 'black' else 'black'
+                                            self.show_game_over_screen(winner)
+                                            game = self.game
+                                            board = game.board
+                                            dragger = game.dragger     
+                                    else:
+                                        prob = random.random()
+                                        print(f"I WANT TO CAPTURE; Prob: {prob}")
+                                        match (piece.name):
+                                            case ('pawn'):
+                                                num = 1 if prob <= 0.39 else 0
+                                            case ('bishop'):
+                                                num = 1 if prob <= 0.40 else 0
+                                            case ('knight'):
+                                                num = 1 if prob <= 0.40 else 0
+                                            case ('rook'):
+                                                num = 1 if prob <= 0.45 else 0
+                                            case ('queen'):
+                                                num = 1 if prob <= 0.55 else 0
+                                            case ('king'):
+                                                num = 1 if prob <= 0.65 else 0
+                                        print(f'num: {num}')
+                                        if num == 1:
+                                            board.move(piece, move)
+                                            board.set_true_en_passant(piece)
+                                            game.play_sound(captured)
+                                            game.next_turn()
+                                            game.check_king_capture()
+                                            if game.game_over:
+                                                dragger.undrag_piece()
+                                                winner = 'white' if game.next_player == 'black' else 'black'
+                                                self.show_game_over_screen(winner)
+                                                game = self.game
+                                                board = game.board
+                                                dragger = game.dragger
+                                        else:
+                                            game.next_turn()
+                                                                      
+
                     
                     dragger.undrag_piece()
 
