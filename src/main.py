@@ -145,6 +145,35 @@ class Main:
 
                                     print(f"Blackjack result: {result}")
 
+                                    if result != 'player':
+                                        print("You lost Blackjack. Capture denied.")
+
+                                        # UNDO drag
+                                        dragger.undrag_piece()
+
+                                        # DO NOT move the piece
+                                        game.next_turn()  # switch to black's turn
+
+                                        # ---- AI MOVE ----
+                                        move_result = game.ai.get_move(board)
+                                        if move_result:
+                                            ai_piece, ai_move = move_result
+                                            ai_captured = board.squares[ai_move.final.row][ai_move.final.col].has_piece()
+                                            board.move(ai_piece, ai_move)
+                                            board.set_true_en_passant(ai_piece)
+                                            game.play_sound(ai_captured)
+                                            game.next_turn()
+                                            game.check_king_capture()
+                                            if game.game_over:
+                                                dragger.undrag_piece()
+                                                winner = 'white' if game.next_player == 'black' else 'black'
+                                                self.show_game_over_screen(winner)
+                                                game = self.game
+                                                board = game.board
+                                                dragger = game.dragger
+
+                                        continue  # skip the rest of the player move logic
+
 
 
                                 board.move(dragger.piece, move)
