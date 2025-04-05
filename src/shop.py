@@ -42,9 +42,13 @@ class ShopUI:
         try:
             image_path = os.path.join("assets", "images", "shop", "button.png")
             self.button_img = pygame.image.load(image_path)
-            self.button_img = pygame.transform.scale(self.dealer_img, (20, 20))
+            self.button_img = pygame.transform.scale(self.button_img, (SIDE_PANEL_WIDTH - 220, 38))
+            image_path = os.path.join("assets", "images", "shop", "buttonPressed.png")
+            self.button_pressed_img = pygame.image.load(image_path)
+            self.button_pressed_img = pygame.transform.scale(self.button_pressed_img, (SIDE_PANEL_WIDTH - 220, 38))
+            self.isPressed = False
         except Exception as e:
-            print("Failed to load shop button image:", e)
+            print("Failed to load shop buttons:", e)
             self.dealer_img = None
         
     def draw(self, surface):
@@ -67,8 +71,10 @@ class ShopUI:
         pygame.draw.line(surface, (255, 255, 255), (right_panel_x + 20, 180), (right_panel_x + SIDE_PANEL_WIDTH - 20, 180), 2)
         
         for upgrade in self.shop.available_upgrades():
-            if self.dealer_img:
-                surface.blit(self.dealer_img, (10, 10))
+            if self.button_img and not self.isPressed:
+                surface.blit(self.button_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 40))
+            elif self.button_pressed_img and self.isPressed:
+                surface.blit(self.button_pressed_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 40))                
             upgrade_text = font.render(f"{upgrade.name}: ${upgrade.cost}", True, (255, 255, 255))
             level_text = font.render(f"Level: {upgrade.level}", True, (255, 255, 255))
             surface.blit(level_text, (right_panel_x + 200, 200 + self.shop.available_upgrades().index(upgrade) * 40))
@@ -76,20 +82,23 @@ class ShopUI:
             left_button_rect = pygame.Rect(right_panel_x + 15, 195 + self.shop.available_upgrades().index(upgrade) * 40, SIDE_PANEL_WIDTH - 230, 35)
             self.upgrade_buttons.append(left_button_rect)
             
-            right_button_rect = pygame.Rect(right_panel_x + 190, 195 + self.shop.available_upgrades().index(upgrade) * 40, SIDE_PANEL_WIDTH - 230, 35)
-            pygame.draw.rect(surface, (255, 255, 255), left_button_rect, width=2, border_radius=5)
-            pygame.draw.rect(surface, (255, 255, 255), right_button_rect, width=2, border_radius=5)
+            # right_button_rect = pygame.Rect(right_panel_x + 190, 195 + self.shop.available_upgrades().index(upgrade) * 40, SIDE_PANEL_WIDTH - 230, 35)
+            # pygame.draw.rect(surface, (255, 255, 255), left_button_rect, width=2, border_radius=5)
+            # pygame.draw.rect(surface, (255, 255, 255), right_button_rect, width=2, border_radius=5)
             
     def get_money(self):
         return self.money
     
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
+            self.isPressed = True
             for i in range(len(self.shop.available_upgrades())):
                 button = self.upgrade_buttons[i]
                 upgrade = self.shop.available_upgrades()[i]
                 if button.collidepoint(event.pos):
-                    if self.money >= upgrade.cost:
+                    if upgrade.level == 5:
+                        print(f"{upgrade.name} is already at max level.")
+                    elif self.money >= upgrade.cost:
                         self.money -= upgrade.cost
                         upgrade.level += 1
                         print(f"Purchased {upgrade.name}. New level: {upgrade.level}. Remaining money: {self.money}")
@@ -101,3 +110,6 @@ class ShopUI:
                 self.bet_amount = self.bet_amount[:-1]
             elif event.unicode.isdigit() or (event.unicode == "." and "." not in self.bet_amount):
                 self.bet_amount += event.unicode
+        
+        if event.type == pygame.MOUSEBUTTONUP:
+            self.isPressed = False
