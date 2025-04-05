@@ -137,7 +137,9 @@ class Main:
                                 captured_piece = target_square.piece if captured else None
 
                                 # Trigger Blackjack if the captured piece is black (AI-controlled)
+                                captured = True
                                 if captured_piece and captured_piece.color == 'black':
+                                    captured = True
                                     print(f"You are about to capture a {captured_piece.name}. Let's play Blackjack first!")
 
                                     bj = BlackjackGame()
@@ -145,13 +147,22 @@ class Main:
 
                                     print(f"Blackjack result: {result}")
 
+                                    if result != 'player':
+                                        captured = False
+                                        print("You lost or tied the Blackjack game. Capture is denied.")
+                                        dragger.undrag_piece()       # Return piece to original square
+                                        game.next_turn()             # Switch to black's turn
+                                        
 
+                                if captured:
+                                    board.move(dragger.piece, move)
+                                    board.set_true_en_passant(dragger.piece)
+                                    game.play_sound(captured)
+                                    game.next_turn()
+                                    game.check_king_capture()
+                                else:
+                                    game.next_turn()
 
-                                board.move(dragger.piece, move)
-                                board.set_true_en_passant(dragger.piece)
-                                game.play_sound(captured)
-                                game.next_turn()
-                                game.check_king_capture()
                                 if game.game_over:
                                     dragger.undrag_piece()
                                     winner = 'white' if game.next_player == 'black' else 'black'
