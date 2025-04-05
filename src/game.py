@@ -10,7 +10,6 @@ from piece import King
 from shop import ShopUI
 from upgrade import Upgrade
 from powerup import PowerUp
-from blackjack import BlackjackUI
 
 
 class Game:
@@ -25,7 +24,6 @@ class Game:
         self.shop = ShopUI(self.money)
         self.ai = ChessAI(self.board)
         self.game_over = False
-        self.blackjack_ui = BlackjackUI()
 
 
 
@@ -113,7 +111,6 @@ class Game:
         pygame.draw.rect(surface, (30, 30, 30), left_panel)
 
         # THEN draw the Blackjack panel (which includes the image)
-        self.blackjack_ui.draw(surface)
 
         title_font = pygame.font.SysFont('monospace', 36, bold=True)  # Larger font for the title
         

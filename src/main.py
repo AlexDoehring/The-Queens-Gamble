@@ -1,5 +1,7 @@
 import pygame
 import sys
+from blackjack import BlackjackGame
+
 
 from const import *
 from game import Game
@@ -87,7 +89,6 @@ class Main:
 
             for event in pygame.event.get():
                 # Let blackjack panel handle its own input
-                game.blackjack_ui.handle_event(event)  # Handle blackjack UI events
                 game.shop.handle_event(event)  # Handle shop UI events
                 game.update_money()  # Update money in the shop
 
@@ -131,7 +132,21 @@ class Main:
                             move = Move(initial, final)
 
                             if board.valid_move(dragger.piece, move):
-                                captured = board.squares[released_row][released_col].has_piece()
+                                target_square = board.squares[released_row][released_col]
+                                captured = target_square.has_piece()
+                                captured_piece = target_square.piece if captured else None
+
+                                # Trigger Blackjack if the captured piece is black (AI-controlled)
+                                if captured_piece and captured_piece.color == 'black':
+                                    print(f"You are about to capture a {captured_piece.name}. Let's play Blackjack first!")
+
+                                    bj = BlackjackGame()
+                                    result = bj.play_round()
+
+                                    print(f"Blackjack result: {result}")
+
+
+
                                 board.move(dragger.piece, move)
                                 board.set_true_en_passant(dragger.piece)
                                 game.play_sound(captured)
