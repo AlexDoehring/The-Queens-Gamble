@@ -1,29 +1,5 @@
-import random
-
-suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
-ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
-values = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
-          '10': 10, 'J': 10, 'Q': 10, 'K': 10, 'A': 11}
-
-class Card:
-    def __init__(self, rank, suit):
-        self.rank = rank
-        self.suit = suit
-
-    def __str__(self):
-        return f"{self.rank} of {self.suit}"
-
-    @property
-    def value(self):
-        return values[self.rank]
-
-class Deck:
-    def __init__(self):
-        self.cards = [Card(rank, suit) for suit in suits for rank in ranks]
-        random.shuffle(self.cards)
-
-    def deal(self):
-        return self.cards.pop()
+from deck import Deck
+from card import Card
 
 class Hand:
     def __init__(self):
@@ -33,8 +9,8 @@ class Hand:
         self.cards.append(card)
 
     def get_value(self):
-        total = sum(card.value for card in self.cards)
-        aces = sum(1 for card in self.cards if card.rank == 'A')
+        total = sum(card.getValue() for card in self.cards)
+        aces = sum(1 for card in self.cards if card.getRank() == 'Ace')
         while total > 21 and aces:
             total -= 10
             aces -= 1
@@ -52,12 +28,12 @@ class BlackjackGame:
     def start_round(self):
         self.player_hand = Hand()
         self.dealer_hand = Hand()
-        self.deck = Deck()
+        self.deck.reshuffle()
 
-        self.player_hand.add_card(self.deck.deal())
-        self.player_hand.add_card(self.deck.deal())
-        self.dealer_hand.add_card(self.deck.deal())
-        self.dealer_hand.add_card(self.deck.deal())
+        self.player_hand.add_card(self.deck.draw())
+        self.player_hand.add_card(self.deck.draw())
+        self.dealer_hand.add_card(self.deck.draw())
+        self.dealer_hand.add_card(self.deck.draw())
 
     def play_round(self):
         self.start_round()
@@ -68,7 +44,7 @@ class BlackjackGame:
         while self.player_hand.get_value() < 21:
             move = input("Hit or Stand? (h/s): ").strip().lower()
             if move == 'h':
-                self.player_hand.add_card(self.deck.deal())
+                self.player_hand.add_card(self.deck.draw())
                 print(f"Player hits: {self.player_hand} (Total: {self.player_hand.get_value()})")
                 if self.player_hand.get_value() > 21:
                     print("Player busts!")
@@ -79,7 +55,7 @@ class BlackjackGame:
         # Dealer turn
         print(f"Dealer reveals: {self.dealer_hand} (Total: {self.dealer_hand.get_value()})")
         while self.dealer_hand.get_value() < 17:
-            self.dealer_hand.add_card(self.deck.deal())
+            self.dealer_hand.add_card(self.deck.draw())
             print(f"Dealer hits: {self.dealer_hand} (Total: {self.dealer_hand.get_value()})")
 
         player_total = self.player_hand.get_value()
