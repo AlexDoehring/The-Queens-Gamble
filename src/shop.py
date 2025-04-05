@@ -74,19 +74,22 @@ class ShopUI:
         
         for upgrade in self.shop.available_upgrades():
             if self.button_pressed_img and self.buttons_pressed[self.shop.available_upgrades().index(upgrade)]:
-                surface.blit(self.button_pressed_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 40))  
+                surface.blit(self.button_pressed_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 50))  
             elif self.button_img:
-                surface.blit(self.button_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 40))              
+                surface.blit(self.button_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 50))              
             upgrade_text = font.render(f"{upgrade.name}: ${upgrade.cost}", True, (9, 48, 78))
             level_text = font.render(f"Level: {upgrade.level}", True, (247, 163, 19))
-            surface.blit(level_text, (right_panel_x + 200, 200 + self.shop.available_upgrades().index(upgrade) * 40))
-            surface.blit(upgrade_text, (right_panel_x + 20, 200 + self.shop.available_upgrades().index(upgrade) * 40))
-            left_button_rect = pygame.Rect(right_panel_x + 15, 195 + self.shop.available_upgrades().index(upgrade) * 40, SIDE_PANEL_WIDTH - 230, 35)
+            surface.blit(level_text, (right_panel_x + 200, 200 + self.shop.available_upgrades().index(upgrade) * 50))
+            surface.blit(upgrade_text, (right_panel_x + 20, 200 + self.shop.available_upgrades().index(upgrade) * 50))
+            left_button_rect = pygame.Rect(right_panel_x + 15, 195 + self.shop.available_upgrades().index(upgrade) * 50, SIDE_PANEL_WIDTH - 230, 35)
             self.upgrade_buttons.append(left_button_rect)
             
             # right_button_rect = pygame.Rect(right_panel_x + 190, 195 + self.shop.available_upgrades().index(upgrade) * 40, SIDE_PANEL_WIDTH - 230, 35)
             # pygame.draw.rect(surface, (255, 255, 255), left_button_rect, width=2, border_radius=5)
             # pygame.draw.rect(surface, (255, 255, 255), right_button_rect, width=2, border_radius=5)
+        
+        pygame.draw.line(surface, (255, 255, 255), (right_panel_x + 20, 300), (right_panel_x + SIDE_PANEL_WIDTH - 20, 300), 2)
+        
             
     def get_money(self):
         return self.money
