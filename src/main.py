@@ -94,7 +94,12 @@ class Main:
                                     return
 
                             if game.next_player == 'black':
-                                piece, move = game.ai.get_random_move()
+                                move_result = game.ai.get_move(board)
+                                if move_result is None:
+                                    print("AI has no valid moves")
+                                else:
+                                    piece, move = move_result
+                                    
                                 if piece and move:
                                     captured = board.squares[move.final.row][move.final.col].has_piece()
                                     board.move(piece, move)
