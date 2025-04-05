@@ -32,35 +32,13 @@ class Shop:
     def change_availability(self):
         self.available = not self.available
         
-
-class ShopHandler:
-    def __init__(self, money=0):
-        self.money = money
-        
-    def handle_event(self, event): #CHANGE
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.input_box.collidepoint(event.pos):
-                self.active_input = True
-            else:
-                self.active_input = False
-
-            if self.hit_button.collidepoint(event.pos):
-                print("Hit pressed")
-
-            if self.stand_button.collidepoint(event.pos):
-                print("Stand pressed")
-
-        if event.type == pygame.KEYDOWN and self.active_input:
-            if event.key == pygame.K_BACKSPACE:
-                self.bet_amount = self.bet_amount[:-1]
-            elif event.unicode.isdigit() or (event.unicode == "." and "." not in self.bet_amount):
-                self.bet_amount += event.unicode
                 
 class ShopUI:
     def __init__(self, money=0):
         self.money = money
         self.shop = Shop(self.money)
-        self.shop_handler = ShopHandler(self.money)
+        self.upgrade_buttons = []
+        self.powerup_buttons = []
         
     def draw(self, surface):
         right_panel_x = SIDE_PANEL_WIDTH + BOARD_WIDTH
@@ -87,6 +65,28 @@ class ShopUI:
             surface.blit(level_text, (right_panel_x + 200, 200 + self.shop.available_upgrades().index(upgrade) * 40))
             surface.blit(upgrade_text, (right_panel_x + 20, 200 + self.shop.available_upgrades().index(upgrade) * 40))
             left_button_rect = pygame.Rect(right_panel_x + 15, 195 + self.shop.available_upgrades().index(upgrade) * 40, SIDE_PANEL_WIDTH - 230, 35)
+            self.upgrade_buttons.append(left_button_rect)
+            
             right_button_rect = pygame.Rect(right_panel_x + 190, 195 + self.shop.available_upgrades().index(upgrade) * 40, SIDE_PANEL_WIDTH - 230, 35)
             pygame.draw.rect(surface, (255, 255, 255), left_button_rect, width=2, border_radius=5)
             pygame.draw.rect(surface, (255, 255, 255), right_button_rect, width=2, border_radius=5)
+            
+    
+    def handle_event(self, event): #CHANGE
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.input_box.collidepoint(event.pos):
+                self.active_input = True
+            else:
+                self.active_input = False
+
+            if self.hit_button.collidepoint(event.pos):
+                print("Hit pressed")
+
+            if self.stand_button.collidepoint(event.pos):
+                print("Stand pressed")
+
+        if event.type == pygame.KEYDOWN and self.active_input:
+            if event.key == pygame.K_BACKSPACE:
+                self.bet_amount = self.bet_amount[:-1]
+            elif event.unicode.isdigit() or (event.unicode == "." and "." not in self.bet_amount):
+                self.bet_amount += event.unicode
