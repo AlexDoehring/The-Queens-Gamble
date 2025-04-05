@@ -91,7 +91,7 @@ class BlackjackUI:
             image_path = os.path.join("assets", "images", "blackjack", "dealer.png")
             print("Attempting to load dealer image from:", os.path.abspath(image_path))
             self.dealer_img = pygame.image.load(image_path)
-            self.dealer_img = pygame.transform.scale(self.dealer_img, (200, 200))
+            self.dealer_img = pygame.transform.scale(self.dealer_img, (400, 400))
             print("Dealer image loaded successfully.")
         except Exception as e:
             print("Failed to load dealer image:", e)
@@ -101,7 +101,8 @@ class BlackjackUI:
         # Panel background should be drawn in game.py before calling this method
 
         if self.dealer_img:
-            screen.blit(self.dealer_img, (SIDE_PANEL_WIDTH // 2 - 90, 10))
+            # Draw the dealer image on the left side of the panel
+            screen.blit(self.dealer_img, (10, 10))
 
         for i, card in enumerate(self.dealer_hand):
             pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(100 + i * 35, 120, 30, 45))
