@@ -16,6 +16,7 @@ class Game:
         self.board = Board()
         self.dragger = Dragger()
         self.config = Config()
+        self.money = 0
         self.ai = ChessAI(self.board)
         self.game_over = False
 
@@ -106,12 +107,21 @@ class Game:
         right_panel = pygame.Rect(right_panel_x, 0, SIDE_PANEL_WIDTH, HEIGHT)
         pygame.draw.rect(surface, (60, 60, 60), right_panel)
 
-        font = self.config.font
-        blackjack_text = font.render("Blackjack", True, (255, 255, 255))
-        shop_text = font.render("Shop", True, (255, 255, 255))
-
+        font = pygame.font.SysFont('monospace', 24)
+        title_font = pygame.font.SysFont('monospace', 36, bold=True)  # Larger font for the title
+        subtitle_font = pygame.font.SysFont('monospace', 28, bold=True)
+        
+        blackjack_text = title_font.render("Blackjack", True, (255, 255, 255))
+        shop_text = title_font.render("Shop", True, (255, 255, 255))
+        balance_text = font.render(f"Money: ${self.money}", True, (255, 255, 255))
+        upgrades_title = subtitle_font.render("Upgrades", True, (255, 255, 255))
+        
         surface.blit(blackjack_text, (20, 20))
         surface.blit(shop_text, (right_panel_x + 20, 20))
+        pygame.draw.line(surface, (255, 255, 255), (right_panel_x + 20, 70), (right_panel_x + SIDE_PANEL_WIDTH - 20, 70), 2)
+        surface.blit(balance_text, (right_panel_x + 20, 80))
+        surface.blit(upgrades_title, (right_panel_x + 20, 140))
+        pygame.draw.line(surface, (255, 255, 255), (right_panel_x + 20, 170), (right_panel_x + SIDE_PANEL_WIDTH - 20, 170), 2)
 
     def next_turn(self):
         self.next_player = 'white' if self.next_player == 'black' else 'black'
