@@ -16,13 +16,8 @@ class Main:
         self.game = Game()
         self.clock = pygame.time.Clock()  # Limit FPS
 
-    
-    
-
     def mainloop(self):
-
-        start_time = time.time()
-
+        # start_time = time.time()
 
         screen = self.screen
         game = self.game
@@ -43,6 +38,8 @@ class Main:
                 dragger.update_blit(screen)
 
             for event in pygame.event.get():
+                # Let blackjack panel handle its own input
+                game.blackjack_ui.handle_event(event)  # Handle blackjack UI events
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     dragger.update_mouse(event.pos)

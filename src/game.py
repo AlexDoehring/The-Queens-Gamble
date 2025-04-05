@@ -10,6 +10,8 @@ from piece import King
 from shop import Shop
 from upgrade import Upgrade
 from powerup import PowerUp
+from blackjack import BlackjackUI
+
 
 class Game:
 
@@ -23,6 +25,8 @@ class Game:
         self.money = 0
         self.ai = ChessAI(self.board)
         self.game_over = False
+        self.blackjack_ui = BlackjackUI()
+
 
 
         # Preload textures once
@@ -104,8 +108,12 @@ class Game:
             pygame.draw.rect(surface, color, rect, width=3)
 
     def show_side_panels(self, surface):
+        # Draw the background first
         left_panel = pygame.Rect(0, 0, SIDE_PANEL_WIDTH, HEIGHT)
         pygame.draw.rect(surface, (30, 30, 30), left_panel)
+
+        # THEN draw the Blackjack panel (which includes the image)
+        self.blackjack_ui.draw(surface)
 
         right_panel_x = SIDE_PANEL_WIDTH + BOARD_WIDTH
         right_panel = pygame.Rect(right_panel_x, 0, SIDE_PANEL_WIDTH, HEIGHT)

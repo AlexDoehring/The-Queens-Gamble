@@ -2,6 +2,7 @@ import pygame
 from deck import Deck
 from card import Card
 from const import SIDE_PANEL_WIDTH, HEIGHT
+import os
 
 class Hand:
     def __init__(self):
@@ -77,8 +78,6 @@ class BlackjackGame:
 class BlackjackUI:
     def __init__(self):
         self.font = pygame.font.SysFont("monospace", 22, bold=True)
-        self.dealer_img = pygame.image.load("the_queens_gamble/assets/images/blackjack/QG_dealer_removebg.png")
-        self.dealer_img = pygame.transform.scale(self.dealer_img, (180, 180))
         self.bet_amount = ""
         self.active_input = False
         self.hit_button = pygame.Rect(50, HEIGHT - 60, 80, 35)
@@ -88,11 +87,21 @@ class BlackjackUI:
         self.player_hand = []
         self.dealer_hand = []
 
-    def draw(self, screen):
-        panel = pygame.Rect(0, 0, SIDE_PANEL_WIDTH, HEIGHT)
-        pygame.draw.rect(screen, (30, 30, 30), panel)
+        try:
+            image_path = os.path.join("assets", "images", "blackjack", "dealer.png")
+            print("Attempting to load dealer image from:", os.path.abspath(image_path))
+            self.dealer_img = pygame.image.load(image_path)
+            self.dealer_img = pygame.transform.scale(self.dealer_img, (200, 200))
+            print("Dealer image loaded successfully.")
+        except Exception as e:
+            print("Failed to load dealer image:", e)
+            self.dealer_img = None
 
-        screen.blit(self.dealer_img, (110, 10))
+    def draw(self, screen):
+        # Panel background should be drawn in game.py before calling this method
+
+        if self.dealer_img:
+            screen.blit(self.dealer_img, (SIDE_PANEL_WIDTH // 2 - 90, 10))
 
         for i, card in enumerate(self.dealer_hand):
             pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(100 + i * 35, 120, 30, 45))
