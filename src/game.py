@@ -122,7 +122,11 @@ class Game:
         
             
     def update_money(self):
-        self.money = self.shop.get_money()   
+        self.money = self.shop.get_money()
+    
+    def get_luck(self):
+        luck_upgrade = self.shop.shop.available_upgrades()[0]
+        return luck_upgrade.effect()
 
     def next_turn(self):
         self.next_player = 'white' if self.next_player == 'black' else 'black'

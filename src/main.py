@@ -167,8 +167,6 @@ class Main:
                                 else:
                                     piece, move = move_result
                                 
-
-                                num = 0
                                 if piece and move:
                                     captured = board.squares[move.final.row][move.final.col].has_piece()
                                     if not captured:
@@ -186,11 +184,13 @@ class Main:
                                             dragger = game.dragger     
                                     else:
                                         prob = random.random()
+                                        luck = game.get_luck()
+                                        newProb = piece.prob - luck
                                         print(f"I WANT TO CAPTURE")
-                                        num = 1 if prob <= piece.prob else 0
-                                        print(f"Piece: {piece.name}, pieceProb: {piece.prob}, actProb: {prob} Num: {num}")
-                                        print(f'num: {num}')
-                                        if num == 1:
+                                        win_capture = True if prob <= newProb else False
+                                        # print(f'Luck: {luck}, Probability: {piece.prob}, Random: {prob}, Result: {win_capture}')
+                                        # print(f"Adjusted Probability: {newProb}")
+                                        if win_capture:
                                             board.move(piece, move)
                                             board.set_true_en_passant(piece)
                                             game.play_sound(captured)
