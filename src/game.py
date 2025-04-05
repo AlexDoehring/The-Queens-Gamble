@@ -36,13 +36,6 @@ class Game:
         if path not in self.texture_cache:
             self.texture_cache[path] = pygame.image.load(path)
         return self.texture_cache[path]
-    
-    def Buttonify(Picture, coords, surface):
-        image = pygame.image.load(Picture)
-        imagerect = image.get_rect()
-        imagerect.topright = coords
-        surface.blit(image,imagerect)
-        return (image,imagerect)
 
     # blit methods
 
@@ -130,7 +123,8 @@ class Game:
         self.shop.draw(surface)
         
             
-        
+    def update_money(self):
+        self.money = self.shop.get_money()   
 
     def next_turn(self):
         self.next_player = 'white' if self.next_player == 'black' else 'black'
