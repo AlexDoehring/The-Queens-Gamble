@@ -77,7 +77,7 @@ class BlackjackGame:
 class BlackjackUI:
     def __init__(self):
         self.font = pygame.font.SysFont("monospace", 22, bold=True)
-        self.dealer_img = pygame.image.load("assets/imgs/dealer.png")
+        self.dealer_img = pygame.image.load("the_queens_gamble/assets/images/blackjack/QG_dealer_removebg.png")
         self.dealer_img = pygame.transform.scale(self.dealer_img, (180, 180))
         self.bet_amount = ""
         self.active_input = False
