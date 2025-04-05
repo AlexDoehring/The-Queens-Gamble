@@ -458,19 +458,6 @@ class Board:
         # king
         self.squares[row_other][4] = Square(row_other, 4, King(color))
 
-    def get_all_legal_moves(self, color):
-        moves = []
-        for row in range(ROWS):
-            for col in range(COLS):
-                piece = self.squares[row][col].piece
-                if piece and piece.color == color:
-                    self.calc_moves(piece, row, col)
-                    for move in piece.moves:
-                        if self.squares[row][col].has_enemy_piece(piece.color):
-                            pass
-                        else:
-                            moves.append((piece, move))
-        return moves 
     
     def get_all_legal_moves(self, color):
         moves = []
@@ -478,9 +465,11 @@ class Board:
             for col in range(COLS):
                 piece = self.squares[row][col].piece
                 if piece and piece.color == color:
+                    piece.clear_moves()
                     self.calc_moves(piece, row, col)
                     for move in piece.moves:
                         target_square = self.squares[move.final.row][move.final.col]
+
                         if not target_square.has_piece() or target_square.has_enemy_piece(color):
                             moves.append((piece, move))
         return moves
