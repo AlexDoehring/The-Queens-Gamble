@@ -7,6 +7,8 @@ class BlackjackUI:
         self.font = pygame.font.SysFont("monospace", 22, bold=True)
         self.bet_amount = ""
         self.active_input = False
+        self.reveal_dealer_second = False
+
         self.hit_button = pygame.Rect(210, HEIGHT - 85, 75, 75)
         self.stand_button = pygame.Rect(290, HEIGHT - 85, 100, 75)
         self.input_box = pygame.Rect(120, HEIGHT - 85, 50, 75)
@@ -71,6 +73,15 @@ class BlackjackUI:
         except Exception as e:
             print("Failed to load bet box image:", e)
             self.bet_img = None
+        
+        try:
+            back_path = os.path.join("assets", "images", "blackjack", "backface.png")
+            self.card_back_img = pygame.image.load(back_path).convert_alpha()
+            self.card_back_img = pygame.transform.scale(self.card_back_img, (70, 105))
+        except Exception as e:
+            print("Failed to load card back image:", e)
+            self.card_back_img = None
+
 
     def update_hands(self, player_cards, dealer_cards):
         self.player_hand = player_cards
@@ -120,7 +131,15 @@ class BlackjackUI:
             pygame.draw.circle(screen, (0, 0, 0), pupil_pos, self.pupil_radius)
 
         for i, card in enumerate(self.dealer_hand):
-            self.render_card(screen, card, 80 + i * self.card_spacing, self.dealer_y)
+            x = 80 + i * self.card_spacing
+            if i == 1 and not self.reveal_dealer_second:
+                if self.card_back_img:
+                    screen.blit(self.card_back_img, (x, self.dealer_y))
+                else:
+                    pygame.draw.rect(screen, (120, 120, 120), pygame.Rect(x, self.dealer_y, 70, 105))
+            else:
+                self.render_card(screen, card, x, self.dealer_y)
+
 
         for i, card in enumerate(self.player_hand):
             self.render_card(screen, card, 80 + i * self.card_spacing, self.player_y)
