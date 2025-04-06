@@ -220,23 +220,6 @@ class BlackjackUI:
             pygame.time.wait(300)
             if not self.card_queue:
                 self.animating_card = False
-
-        # Draw green panel UI
-        pygame.draw.rect(screen, (20, 100, 20), (1025, 0, 400, HEIGHT))
-
-        dialogue_font = pygame.font.SysFont("monospace", 24)
-        dialogue_lines = self.dealer_message.split('\n')
-        for i, line in enumerate(dialogue_lines):
-            line_surf = dialogue_font.render(line, True, (255, 255, 255))
-            screen.blit(line_surf, (1050, 40 + i * 30))
-
-        pygame.draw.rect(screen, (255, 255, 255), self.exit_button, border_radius=8)
-        exit_font = pygame.font.SysFont("monospace", 22, bold=True)
-        exit_text = exit_font.render("EXIT", True, (0, 0, 0))
-        screen.blit(exit_text, (
-            self.exit_button.centerx - exit_text.get_width() // 2,
-            self.exit_button.centery - exit_text.get_height() // 2
-        ))
         
         
     # def update_bet_number(self, screen, amount):
