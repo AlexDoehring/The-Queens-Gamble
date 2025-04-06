@@ -38,6 +38,12 @@ def run_blackjack_ui(screen, player_piece, dealer_piece):
                         phase = 'done'
 
                 elif ui.stand_button.collidepoint(event.pos) and phase == 'player':
+                    
+                    pygame.time.wait(1500)  # 1.5 second pause before revealing
+                    ui.reveal_dealer_second = True
+
+                    ui.reveal_dealer_second = True
+
                     while bj_game.dealer_hand.get_value() < 17:
                         bj_game.dealer_hand.add_card(bj_game.deck.draw())
                     ui.update_hands(bj_game.player_hand.cards, bj_game.dealer_hand.cards)
