@@ -75,6 +75,11 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
 
     phase = 'player'
     winner = None
+    
+    if len(bj_game.player_hand.get_value()) > 1:
+        ui.total_number = str(bj_game.player_hand.get_value()[0]) + "/" + str(bj_game.player_hand.get_value()[1])
+    else:
+        ui.total_number = str(bj_game.player_hand.get_value()[0])
 
     while True:
         screen.fill((0, 100, 0))
@@ -94,7 +99,7 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
                     bj_game.player_hand.add_card(new_card)
                     ui.queue_card(new_card, to_dealer=False)
                     
-                    handVal = bj_game.player_hand.get_value()[0] if len(bj_game.player_hand.get_value()) > 1 else min(bj_game.player_hand.get_value())
+                    handVal = bj_game.player_hand.get_value()[0] if len(bj_game.player_hand.get_value()) < 1 else min(bj_game.player_hand.get_value())
                     if handVal > 21:
                         winner = 'dealer'
                         phase = 'done'
