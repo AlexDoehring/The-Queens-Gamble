@@ -6,38 +6,42 @@ class SpeechBubble:
         self.image = None
         self.font = pygame.font.SysFont("monospace", 18)
         self.message = ""
-        self.visible = False
-        self.timer = 0  # Time left to show the message (ms)
-        self.duration = 3000  # default display duration in ms
-        self.position = (370, 40)  # adjust as needed based on dealer location
+        self.position = (200, 160)  # adjust as needed based on dealer location
 
         try:
             path = os.path.join("assets", "images", "blackjack", "speech_bubble.png")
             self.image = pygame.image.load(path).convert_alpha()
-            self.image = pygame.transform.scale(self.image, (300, 150))
+            self.image = pygame.transform.scale(self.image, (200, 160))  # adjust size as needed
         except Exception as e:
             print("Failed to load speech bubble image:", e)
 
-    def say(self, message, duration=None):
+    def say(self, message):
         self.message = message
-        self.visible = True
-        self.timer = duration if duration else self.duration
 
     def update(self, dt):
-        if self.visible:
-            self.timer -= dt
-            if self.timer <= 0:
-                self.visible = False
+        pass  # No longer needed for always-visible mode
 
     def draw(self, screen):
-        if self.visible and self.image:
-            x, y = self.position
+        x, y = self.position
+
+        if self.image:
             screen.blit(self.image, (x, y))
 
-            lines = self.wrap_text(self.message, self.font, 260)
-            for i, line in enumerate(lines):
-                text = self.font.render(line, True, (0, 0, 0))
-                screen.blit(text, (x + 20, y + 20 + i * 22))
+        # Adjust for real usable space inside the image (due to transparent padding)
+        usable_width = 160  # fits visually within the actual text area
+        text_padding_x = 20
+        text_padding_y = 40
+        line_height = 22
+
+        lines = self.wrap_text(self.message, self.font, usable_width)
+
+        # Optional: center vertically if few lines
+        total_height = line_height * len(lines)
+        start_y = y + text_padding_y
+
+        for i, line in enumerate(lines):
+            text = self.font.render(line, True, (0, 0, 0))
+            screen.blit(text, (x + text_padding_x, start_y + i * line_height))
 
     def wrap_text(self, text, font, max_width):
         words = text.split(' ')

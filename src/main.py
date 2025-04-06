@@ -225,6 +225,7 @@ class Main:
 
                                 # Trigger Blackjack if the captured piece is black (AI-controlled)
                                 if captured_piece and captured_piece.color == 'black':
+                                    self.game.say_to_player("Let's play some cards!")
                                     print(f"You are about to capture a {captured_piece.name}. Let's play Blackjack first!")
                                     
                                     result = run_blackjack_ui(self.screen, dragger.piece.name, captured_piece.name, self.game.blackjack_ui)
@@ -233,10 +234,13 @@ class Main:
                                     print(f"Blackjack result: {result}")
                                     
                                     if result != 'player':
-                                        print("You lost the Blackjack game. Capture is denied.") if result == 'dealer' else print("It's a push. Capture is denied.")
+                                        msg = "Hmph. Try that again." if result == 'dealer' else "That was close... but not enough."
+                                        self.game.say_to_player(msg)
+
                                         dragger.undrag_piece()       # Return piece to original square
                                         game.next_turn()             # Switch to black's turn
                                     else:
+                                        self.game.say_to_player("Hmm, you win this one.")
                                         board.move(dragger.piece, move)
                                         board.set_true_en_passant(dragger.piece)
                                         game.play_sound(captured)
@@ -273,6 +277,9 @@ class Main:
                             game.show_moves(screen)
                             game.show_pieces(screen)
                             game.show_hover(screen)
+
+                            game.update_speech_bubble(self.clock.get_time())  # Add this just before pygame.display.update()
+
                             pygame.display.update()
 
                             pygame.time.wait(1000)
@@ -309,6 +316,7 @@ class Main:
                                         # print(f'Luck: {luck}, Probability: {piece.prob}, Random: {prob}, Result: {win_capture}')
                                         # print(f"Adjusted Probability: {newProb}")
                                         if win_capture:
+                                            self.game.say_to_player("My move...")
                                             board.move(piece, move)
                                             board.set_true_en_passant(piece)
                                             game.play_sound(captured)
@@ -322,10 +330,9 @@ class Main:
                                                 board = game.board
                                                 dragger = game.dragger
                                         else:
+                                            self.game.say_to_player("Nice defense.")
                                             game.next_turn()
                                                                       
-
-                    
                     dragger.undrag_piece()
 
                 elif event.type == pygame.KEYDOWN:
@@ -342,6 +349,7 @@ class Main:
                     pygame.quit()
                     sys.exit()
 
+            game.update_speech_bubble(self.clock.get_time())  # Add this just before pygame.display.update()
             pygame.display.update()
             # FPS calculation
             # frame_time = time.time() - start_time
