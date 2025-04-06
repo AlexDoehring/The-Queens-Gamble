@@ -51,7 +51,7 @@ class ShopUI:
             self.button_img = pygame.transform.scale(self.button_img, (SIDE_PANEL_WIDTH - 220, 38))
             image_path = os.path.join("assets", "images", "shop", "info_popup.png")
             self.info_img = pygame.image.load(image_path).convert_alpha()
-            self.info_img = pygame.transform.scale(self.info_img, (420, 561))
+            self.info_img = pygame.transform.scale(self.info_img, (410, 550))
             image_path = os.path.join("assets", "images", "shop", "buttonPressed.png")
             self.button_pressed_img = pygame.image.load(image_path)
             self.button_pressed_img = pygame.transform.scale(self.button_pressed_img, (SIDE_PANEL_WIDTH - 220, 38))
