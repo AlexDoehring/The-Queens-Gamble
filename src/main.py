@@ -80,6 +80,13 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
         ui.total_number = str(bj_game.player_hand.get_value()[0]) + "/" + str(bj_game.player_hand.get_value()[1])
     else:
         ui.total_number = str(bj_game.player_hand.get_value()[0])
+    ui.draw(screen)
+    pygame.display.flip()
+    
+    # if len(bj_game.dealer_hand.get_value()) > 1:
+    #     ui.dealer_number = str(bj_game.dealer_hand.get_value()[0]) + "/" + str(bj_game.dealer_hand.get_value()[1])
+    # else:
+    #     ui.dealer_number = str(bj_game.dealer_hand.get_value()[0])
 
     while True:
         screen.fill((0, 100, 0))
@@ -100,29 +107,54 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
                     ui.queue_card(new_card, to_dealer=False)
                     
                     handVal = bj_game.player_hand.get_value()[0] if len(bj_game.player_hand.get_value()) < 1 else min(bj_game.player_hand.get_value())
+                    playerAce = True if len(bj_game.player_hand.get_value()) > 1 else False
+                    
+                    if playerAce:
+                        ui.total_number = str(bj_game.player_hand.get_value()[0]) + "/" + str(bj_game.player_hand.get_value()[1])
+                    else:
+                        ui.total_number = str(bj_game.player_hand.get_value()[0])
+                    ui.draw(screen)
+                    pygame.display.flip()
+                    
                     if handVal > 21:
                         winner = 'dealer'
                         phase = 'done'
 
                 elif ui.stand_button.collidepoint(event.pos) and phase == 'player':
                     ui.reveal_dealer_second = True
-
-
+                    pygame.time.wait(1000)
                     if dealerAce:
                         while max(bj_game.dealer_hand.get_value()) < 17 or (max(bj_game.dealer_hand.get_value()) > 21 and min(bj_game.dealer_hand.get_value()) < 17):
+                            pygame.time.wait(1000)
                             card = bj_game.deck.draw()
-                            bj_game.dealer_hand.add_card(card)
                             ui.queue_card(card, to_dealer=True)
+                            ui.dealer_number = str(bj_game.dealer_hand.get_value()[0]) + "/" + str(bj_game.dealer_hand.get_value()[1])
+                            ui.draw(screen)
+                            pygame.display.flip()
+                            bj_game.dealer_hand.add_card(card)
+                            
+                        ui.dealer_number = str(bj_game.dealer_hand.get_value()[0]) + "/" + str(bj_game.dealer_hand.get_value()[1])
+                        ui.draw(screen)
+                        pygame.display.flip()
                         min_hand = min(bj_game.dealer_hand.get_value())
                         max_hand = max(bj_game.dealer_hand.get_value())
                         dealer_total = min_hand if max_hand > 21 else max_hand
                     else:
                         while bj_game.dealer_hand.get_value()[0] < 17:
+                            pygame.time.wait(1000)
                             card = bj_game.deck.draw()
-                            bj_game.dealer_hand.add_card(card)
                             ui.queue_card(card, to_dealer=True)
+                            ui.dealer_number = str(bj_game.dealer_hand.get_value()[0])
+                            ui.draw(screen)
+                            pygame.display.flip()
+                            bj_game.dealer_hand.add_card(card)
+                        
+                        ui.dealer_number = str(bj_game.dealer_hand.get_value()[0])
+                        ui.draw(screen)
+                        pygame.display.flip()
                         dealer_total = bj_game.dealer_hand.get_value()[0]
 
+                    # player total logic
                     if playerAce:
                         min_hand = min(bj_game.player_hand.get_value())
                         max_hand = max(bj_game.player_hand.get_value())
@@ -139,7 +171,10 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
                         winner = 'dealer'
                     else:
                         winner = 'push'
+                    pygame.time.wait(2000)
                     ui.bet_number = 0
+                    ui.total_number = "0"
+                    ui.dealer_number = "0"
                     ui.draw(screen)
                     pygame.display.flip()
                     phase = 'done'
