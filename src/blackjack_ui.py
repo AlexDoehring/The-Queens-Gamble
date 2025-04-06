@@ -19,6 +19,11 @@ class BlackjackUI:
         
         self.betnumbertext = None
         self.bet_number = 0
+        
+        self.total_text = None
+        self.dealer_text = None
+        self.total_number = 0
+        self.dealer_number = 0
 
         self.player_hand = []
         self.dealer_hand = []
@@ -195,6 +200,13 @@ class BlackjackUI:
         betnumberfont = pygame.font.SysFont('monospace', 40, bold=True)
         self.betnumbertext = betnumberfont.render(str(self.bet_number), True, (255, 255, 255))
         screen.blit(self.betnumbertext, (self.bet_box.x + 110, self.bet_box.y + 16))
+        
+        totalnumberfont = pygame.font.SysFont('monospace', 16, bold=True)
+        self.total_text = totalnumberfont.render("Your Total: " + str(self.total_number), True, (255, 255, 255))
+        screen.blit(self.total_text, (self.bet_box.x + 230, self.bet_box.y - 20))
+        totalnumberfont = pygame.font.SysFont('monospace', 16, bold=True)
+        self.dealer_text = totalnumberfont.render("Dealer Total: " + str(self.dealer_number), True, (255, 255, 255))
+        screen.blit(self.dealer_text, (self.bet_box.x + 230, self.bet_box.y - 180))
     
 
         if self.hit_img_rest and self.hit_img_push:
