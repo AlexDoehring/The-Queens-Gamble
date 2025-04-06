@@ -196,9 +196,9 @@ class Main:
                                     # result = bj.play_round()
 
                                     print(f"Blackjack result: {result}")
-
+                                    
                                     if result != 'player':
-                                        print("You lost or tied the Blackjack game. Capture is denied.")
+                                        print("You lost the Blackjack game. Capture is denied.") if result == 'dealer' else print("It's a push. Capture is denied.")
                                         dragger.undrag_piece()       # Return piece to original square
                                         game.next_turn()             # Switch to black's turn
                                     else:

@@ -2,6 +2,7 @@ from deck import Deck
 from card import Card
 from piece import Piece
 import random
+import time
 
 class Hand:
     def __init__(self):
@@ -88,14 +89,18 @@ class BlackjackGame:
                     print("Player busts!")
                     return 'dealer'
             elif move == 's':
+                time.sleep(1)   # WAIT
+                print("Player stands.")
                 break
             else:
                 print("Invalid input. Please type 'h' or 's'.")
 
         print(f"\nDealer reveals: {self.dealer_hand} (Total: {self.dealer_hand.get_value()})")
+        time.sleep(1)   # WAIT
         while self.dealer_hand.get_value() < 17:
             self.dealer_hand.add_card(self.deck.draw())
             print(f"Dealer hits: {self.dealer_hand} (Total: {self.dealer_hand.get_value()})")
+            time.sleep(1)   # WAIT
 
         player_total = self.player_hand.get_value()
         dealer_total = self.dealer_hand.get_value()
@@ -103,13 +108,17 @@ class BlackjackGame:
         print("\n=== RESULT ===")
         if dealer_total > 21:
             print("Dealer busts! Player wins!")
+            time.sleep(1)   # WAIT
             return 'player'
         elif player_total > dealer_total:
             print("Player wins!")
+            time.sleep(1)   # WAIT
             return 'player'
         elif player_total < dealer_total:
             print("Dealer wins!")
+            time.sleep(1)   # WAIT
             return 'dealer'
         else:
             print("Push!")
+            time.sleep(1)   # WAIT
             return 'push'
