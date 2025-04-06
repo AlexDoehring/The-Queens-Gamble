@@ -10,10 +10,10 @@ from square import Square
 from move import Move
 import time
 
-def run_blackjack_ui(screen, player_card=None, dealer_card=None):
+def run_blackjack_ui(screen, player_piece, dealer_piece):
     bj_game = BlackjackGame()
     ui = BlackjackUI()
-    bj_game.start_round(player_card, dealer_card)
+    bj_game.start_round(player_piece, dealer_piece)
     ui.update_hands(bj_game.player_hand.cards, bj_game.dealer_hand.cards)
 
     phase = 'player'
@@ -190,10 +190,8 @@ class Main:
                                 # Trigger Blackjack if the captured piece is black (AI-controlled)
                                 if captured_piece and captured_piece.color == 'black':
                                     print(f"You are about to capture a {captured_piece.name}. Let's play Blackjack first!")
-
-                                    bj = BlackjackGame()
                                     
-                                    result = bj.play_round(dragger.piece.name, captured_piece.name)
+                                    result = run_blackjack_ui(self.screen, dragger.piece.name, captured_piece.name)
                                     # result = bj.play_round()
 
                                     print(f"Blackjack result: {result}")
