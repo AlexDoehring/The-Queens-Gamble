@@ -30,6 +30,9 @@ class Game:
         self.blackjack_ui = BlackjackUI()
         self.speech_bubble = SpeechBubble()
 
+        # Start screen Bubble
+        self.speech_bubble.say("Blackjack Burt is online.")
+
         # Preload textures once
         self.texture_cache = {}
 
