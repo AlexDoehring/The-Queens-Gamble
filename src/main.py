@@ -3,7 +3,6 @@ import sys
 from blackjack import BlackjackGame
 import random
 from blackjack_ui import BlackjackUI
-
 from const import *
 from game import Game
 from square import Square
@@ -14,8 +13,18 @@ def run_blackjack_ui(screen, player_piece, dealer_piece, blackjack_ui):
     bj_game = BlackjackGame()
     ui = blackjack_ui
     ui.reveal_dealer_second = False
+
     bj_game.start_round(player_piece, dealer_piece)
-    ui.update_hands(bj_game.player_hand.cards, bj_game.dealer_hand.cards)
+
+    # Clear hands before adding animated cards
+    ui.player_hand.clear()
+    ui.dealer_hand.clear()
+
+    # Add initial cards with animation and game state
+    ui.queue_card(bj_game.player_hand.cards[0], to_dealer=False)
+    ui.queue_card(bj_game.player_hand.cards[1], to_dealer=False)
+    ui.queue_card(bj_game.dealer_hand.cards[0], to_dealer=True)
+    ui.queue_card(bj_game.dealer_hand.cards[1], to_dealer=True)
 
     phase = 'player'
     winner = None
@@ -32,22 +41,21 @@ def run_blackjack_ui(screen, player_piece, dealer_piece, blackjack_ui):
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if ui.hit_button.collidepoint(event.pos) and phase == 'player':
-                    bj_game.player_hand.add_card(bj_game.deck.draw())
-                    ui.update_hands(bj_game.player_hand.cards, bj_game.dealer_hand.cards)
+                    new_card = bj_game.deck.draw()
+                    bj_game.player_hand.add_card(new_card)
+                    ui.queue_card(new_card, to_dealer=False)
+
                     if bj_game.player_hand.get_value() > 21:
                         winner = 'dealer'
                         phase = 'done'
 
                 elif ui.stand_button.collidepoint(event.pos) and phase == 'player':
-                    
-                    pygame.time.wait(1500)  # 1.5 second pause before revealing
-                    ui.reveal_dealer_second = True
-
                     ui.reveal_dealer_second = True
 
                     while bj_game.dealer_hand.get_value() < 17:
-                        bj_game.dealer_hand.add_card(bj_game.deck.draw())
-                    ui.update_hands(bj_game.player_hand.cards, bj_game.dealer_hand.cards)
+                        card = bj_game.deck.draw()
+                        bj_game.dealer_hand.add_card(card)
+                        ui.queue_card(card, to_dealer=True)
 
                     player_total = bj_game.player_hand.get_value()
                     dealer_total = bj_game.dealer_hand.get_value()
@@ -60,7 +68,7 @@ def run_blackjack_ui(screen, player_piece, dealer_piece, blackjack_ui):
                         winner = 'push'
                     phase = 'done'
 
-        if phase == 'done':
+        if phase == 'done' and not ui.animating_card:
             pygame.time.wait(1000)
             return winner
 

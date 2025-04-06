@@ -31,6 +31,10 @@ class BlackjackUI:
         self.hit_pressed = False
         self.stand_pressed = False
 
+        # Animation state
+        self.animating_card = False
+        self.card_queue = []
+
         # Load images
         try:
             image_path = os.path.join("assets", "images", "blackjack", "dealer.png")
@@ -82,13 +86,16 @@ class BlackjackUI:
             print("Failed to load card back image:", e)
             self.card_back_img = None
 
-
     def update_hands(self, player_cards, dealer_cards):
         self.player_hand = player_cards
         self.dealer_hand = dealer_cards
 
     def set_bet_amount(self, amount):
         self.bet_amount = amount
+
+    def queue_card(self, card, to_dealer=False):
+        self.card_queue.append((card, to_dealer))
+        self.animating_card = True
 
     def render_card(self, screen, card, x, y):
         rect = pygame.Rect(x, y, 70, 105)
@@ -115,9 +122,7 @@ class BlackjackUI:
             screen.blit(self.dealer_img, (-10, 0))
 
         if self.deck_img:
-            #Image size is 70x105, so we need to adjust the position accordingly
-            # Want to edit size of the image to fit the screen
-            screen.blit(self.deck_img, (265, self.dealer_y + 95))  # Rough position near dealer cards
+            screen.blit(self.deck_img, (265, self.dealer_y + 95))
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
         for center in [self.eye_left_center, self.eye_right_center]:
@@ -139,7 +144,6 @@ class BlackjackUI:
                     pygame.draw.rect(screen, (120, 120, 120), pygame.Rect(x, self.dealer_y, 70, 105))
             else:
                 self.render_card(screen, card, x, self.dealer_y)
-
 
         for i, card in enumerate(self.player_hand):
             self.render_card(screen, card, 80 + i * self.card_spacing, self.player_y)
@@ -165,3 +169,13 @@ class BlackjackUI:
         else:
             pygame.draw.rect(screen, (200, 50, 50), self.stand_button)
             screen.blit(self.font.render("STAND", True, (0, 0, 0)), (self.stand_button.x + 5, self.stand_button.y + 5))
+
+        if self.animating_card and self.card_queue:
+            card, to_dealer = self.card_queue.pop(0)
+            if to_dealer:
+                self.dealer_hand.append(card)
+            else:
+                self.player_hand.append(card)
+            pygame.time.wait(300)
+            if not self.card_queue:
+                self.animating_card = False
