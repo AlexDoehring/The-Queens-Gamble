@@ -12,12 +12,24 @@ class Hand:
         self.cards.append(card)
 
     def get_value(self):
-        total = sum(card.getValue() for card in self.cards)
-        aces = sum(1 for card in self.cards if card.getRank() == 'Ace')
-        while total > 21 and aces:
-            total -= 10
-            aces -= 1
-        return total
+        total = 0
+        ace_count = 0
+        for card in self.cards:
+            if card.getRank() == "Ace":
+                ace_count += 1
+            else:
+                total += card.getValue()
+        if ace_count == 0: # If no aces, only one total
+            return [total]
+
+        # One total with all aces as 1
+        min_total = total + ace_count
+
+        # Another total with one ace as 11 (i.e., +10 more)
+        max_total = min_total + 10 if min_total + 10 <= 21 else min_total
+
+        return [min_total] if max_total == min_total else [min_total, max_total]
+
 
     def __str__(self):
         return ', '.join(str(card) for card in self.cards)
@@ -74,51 +86,53 @@ class BlackjackGame:
         self.dealer_hand.add_card(dealer_card or self.deck.draw())
         self.dealer_hand.add_card(self.deck.draw())
 
-    def play_round(self, player_card=None, dealer_card=None):
-        self.start_round(player_card, dealer_card)
-        print("\n=== BLACKJACK ROUND ===")
-        print(f"Dealer shows: {self.dealer_hand.cards[0]}")
-        print(f"Player has: {self.player_hand} (Total: {self.player_hand.get_value()})")
+    # def play_round(self, player_card=None, dealer_card=None):
+    #     self.start_round(player_card, dealer_card)
+    #     print("\n=== BLACKJACK ROUND ===")
+    #     print(f"Dealer shows: {self.dealer_hand.cards[0]}")
+    #     print(f"Player has: {self.player_hand} (Total: {self.player_hand.get_value()})")
 
-        while self.player_hand.get_value() < 21:
-            move = input("Hit or Stand? (h/s): ").strip().lower()
-            if move == 'h':
-                self.player_hand.add_card(self.deck.draw())
-                print(f"Player hits: {self.player_hand} (Total: {self.player_hand.get_value()})")
-                if self.player_hand.get_value() > 21:
-                    print("Player busts!")
-                    return 'dealer'
-            elif move == 's':
-                time.sleep(1)   # WAIT
-                print("Player stands.")
-                break
-            else:
-                print("Invalid input. Please type 'h' or 's'.")
+    #     handVal = self.player_hand.get_value()
+    #     while handVal < 21:
+    #         move = input("Hit or Stand? (h/s): ").strip().lower()
+    #         if move == 'h':
+    #             self.player_hand.add_card(self.deck.draw())
+    #             handVal = self.player_hand.get_value()
+    #             print(f"Player hits: {self.player_hand} (Total: {self.player_hand.get_value()})")
+    #             if self.player_hand.get_value() > 21:
+    #                 print("Player busts!")
+    #                 return 'dealer'
+    #         elif move == 's':
+    #             print("Player stands.")
+    #             time.sleep(1)   # WAIT
+    #             break
+    #         else:
+    #             print("Invalid input. Please type 'h' or 's'.")
 
-        print(f"\nDealer reveals: {self.dealer_hand} (Total: {self.dealer_hand.get_value()})")
-        time.sleep(1)   # WAIT
-        while self.dealer_hand.get_value() < 17:
-            self.dealer_hand.add_card(self.deck.draw())
-            print(f"Dealer hits: {self.dealer_hand} (Total: {self.dealer_hand.get_value()})")
-            time.sleep(1)   # WAIT
+    #     print(f"\nDealer reveals: {self.dealer_hand} (Total: {self.dealer_hand.get_value()})")
+    #     time.sleep(1)   # WAIT
+    #     while self.dealer_hand.get_value() < 17:
+    #         self.dealer_hand.add_card(self.deck.draw())
+    #         print(f"Dealer hits: {self.dealer_hand} (Total: {self.dealer_hand.get_value()})")
+    #         time.sleep(1)   # WAIT
 
-        player_total = self.player_hand.get_value()
-        dealer_total = self.dealer_hand.get_value()
+    #     player_total = self.player_hand.get_value()
+    #     dealer_total = self.dealer_hand.get_value()
 
-        print("\n=== RESULT ===")
-        if dealer_total > 21:
-            print("Dealer busts! Player wins!")
-            time.sleep(1)   # WAIT
-            return 'player'
-        elif player_total > dealer_total:
-            print("Player wins!")
-            time.sleep(1)   # WAIT
-            return 'player'
-        elif player_total < dealer_total:
-            print("Dealer wins!")
-            time.sleep(1)   # WAIT
-            return 'dealer'
-        else:
-            print("Push!")
-            time.sleep(1)   # WAIT
-            return 'push'
+    #     print("\n=== RESULT ===")
+    #     if dealer_total > 21:
+    #         print("Dealer busts! Player wins!")
+    #         time.sleep(1)   # WAIT
+    #         return 'player'
+    #     elif player_total > dealer_total:
+    #         print("Player wins!")
+    #         time.sleep(1)   # WAIT
+    #         return 'player'
+    #     elif player_total < dealer_total:
+    #         print("Dealer wins!")
+    #         time.sleep(1)   # WAIT
+    #         return 'dealer'
+    #     else:
+    #         print("Push!")
+    #         time.sleep(1)   # WAIT
+    #         return 'push'
