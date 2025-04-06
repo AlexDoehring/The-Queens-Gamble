@@ -103,7 +103,7 @@ class ShopUI:
             # pygame.draw.rect(surface, (255, 255, 255), left_button_rect, width=2, border_radius=5)
             # pygame.draw.rect(surface, (255, 255, 255), right_button_rect, width=2, border_radius=5)
         btn_offset = len(self.shop.available_upgrades())
-        powerup_title = subtitle_font.render("Power-Ups", True, (255, 255, 255))
+        powerup_title = subtitle_font.render("Power-Ups (DO NOT BUY)", True, (255, 255, 255))
         surface.blit(powerup_title, (right_panel_x + 20, 340))
         pygame.draw.line(surface, (255, 255, 255), (right_panel_x + 20, 380), (right_panel_x + SIDE_PANEL_WIDTH - 20, 380), 2)
         for pup in self.shop.available_powerups():
