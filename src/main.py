@@ -100,6 +100,7 @@ class Main:
         pygame.display.set_caption('Chess')
         self.game = Game()
         self.clock = pygame.time.Clock()  # Limit FPS
+    
 
     
 
@@ -243,6 +244,8 @@ class Main:
                                         game.check_king_capture()
                                         print(f"Bounty for piece captured: {captured_piece.bounty}")
                                         game.add_money(captured_piece.bounty)
+                                        dragger.undrag_piece()
+
 
                                 else:
                                     board.move(dragger.piece, move)
@@ -259,6 +262,20 @@ class Main:
                                     board = game.board
                                     dragger = game.dragger
 
+                            dragger.undrag_piece()
+                            
+                            # force full re-draw manually
+                            screen.fill((0, 0, 0))
+                            game.show_side_panels(screen)
+                            game.show_bg(screen)
+                            game.show_last_move(screen)
+                            game.show_moves(screen)
+                            game.show_pieces(screen)
+                            game.show_hover(screen)
+                            pygame.display.update()
+
+                            pygame.time.wait(1000)
+
                             if game.next_player == 'black':
                                 move_result = game.ai.get_move(board)
                                 if move_result is None:
@@ -267,6 +284,8 @@ class Main:
                                     piece, move = move_result
                                 
                                 if piece and move:
+                                    #dragger.undrag_piece()
+                                    
                                     captured = board.squares[move.final.row][move.final.col].has_piece()
                                     if not captured:
                                         board.move(piece, move)
