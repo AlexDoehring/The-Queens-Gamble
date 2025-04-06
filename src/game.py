@@ -134,6 +134,10 @@ class Game:
     def get_luck(self):
         luck_upgrade = self.shop.shop.available_upgrades()[0]
         return luck_upgrade.effect()
+    
+    def get_bounty(self):
+        bounty_upgrade = self.shop.shop.available_upgrades()[1]
+        return bounty_upgrade.effect()
 
     def next_turn(self):
         self.next_player = 'white' if self.next_player == 'black' else 'black'

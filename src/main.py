@@ -242,8 +242,9 @@ class Main:
                                         game.play_sound(captured)
                                         game.next_turn()
                                         game.check_king_capture()
-                                        print(f"Bounty for piece captured: {captured_piece.bounty}")
-                                        game.add_money(captured_piece.bounty)
+                                        bounty = captured_piece.bounty * (1 + game.get_bounty())
+                                        print(f"Bounty for piece captured: {bounty}")
+                                        game.add_money(bounty)
                                         dragger.undrag_piece()
 
 
@@ -284,7 +285,6 @@ class Main:
                                     piece, move = move_result
                                 
                                 if piece and move:
-                                    #dragger.undrag_piece()
                                     
                                     captured = board.squares[move.final.row][move.final.col].has_piece()
                                     if not captured:
