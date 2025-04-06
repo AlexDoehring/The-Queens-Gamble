@@ -35,6 +35,13 @@ class BlackjackUI:
         self.animating_card = False
         self.card_queue = []
 
+        # Dialogue and result tracking
+        self.dealer_message = "Let's play a fair hand!"
+        self.exit_button = pygame.Rect(1100, 550, 150, 60)
+        self.player_score = 0
+        self.dealer_score = 0
+        self.win_history = []
+
         # Load images
         try:
             image_path = os.path.join("assets", "images", "blackjack", "dealer.png")
@@ -81,10 +88,18 @@ class BlackjackUI:
         try:
             back_path = os.path.join("assets", "images", "blackjack", "backface.png")
             self.card_back_img = pygame.image.load(back_path).convert_alpha()
-            self.card_back_img = pygame.transform.scale(self.card_back_img, (70, 105))
+            self.card_back_img = pygame.transform.scale(self.card_back_img, (100, 140))
         except Exception as e:
             print("Failed to load card back image:", e)
             self.card_back_img = None
+
+        try:
+            bg_path = os.path.join("assets", "images", "blackjack", "background.png")
+            self.background_img = pygame.image.load(bg_path).convert()
+            self.background_img = pygame.transform.scale(self.background_img, (1440, HEIGHT))
+        except Exception as e:
+            print("Failed to load blackjack background:", e)
+            self.background_img = None
 
     def update_hands(self, player_cards, dealer_cards):
         self.player_hand = player_cards
@@ -118,6 +133,11 @@ class BlackjackUI:
         screen.blit(text, (rect.x + 8, rect.y + 10))
 
     def draw(self, screen):
+        if self.background_img:
+            screen.blit(self.background_img, (0, 0))
+        else:
+            screen.fill((0, 100, 0))
+
         if self.dealer_img:
             screen.blit(self.dealer_img, (-10, 0))
 
@@ -139,7 +159,7 @@ class BlackjackUI:
             x = 80 + i * self.card_spacing
             if i == 1 and not self.reveal_dealer_second:
                 if self.card_back_img:
-                    screen.blit(self.card_back_img, (x, self.dealer_y))
+                    screen.blit(self.card_back_img, (x, self.dealer_y - 10))
                 else:
                     pygame.draw.rect(screen, (120, 120, 120), pygame.Rect(x, self.dealer_y, 70, 105))
             else:
@@ -179,3 +199,20 @@ class BlackjackUI:
             pygame.time.wait(300)
             if not self.card_queue:
                 self.animating_card = False
+
+        # Draw green panel UI
+        pygame.draw.rect(screen, (20, 100, 20), (1025, 0, 400, HEIGHT))
+
+        dialogue_font = pygame.font.SysFont("monospace", 24)
+        dialogue_lines = self.dealer_message.split('\n')
+        for i, line in enumerate(dialogue_lines):
+            line_surf = dialogue_font.render(line, True, (255, 255, 255))
+            screen.blit(line_surf, (1050, 40 + i * 30))
+
+        pygame.draw.rect(screen, (255, 255, 255), self.exit_button, border_radius=8)
+        exit_font = pygame.font.SysFont("monospace", 22, bold=True)
+        exit_text = exit_font.render("EXIT", True, (0, 0, 0))
+        screen.blit(exit_text, (
+            self.exit_button.centerx - exit_text.get_width() // 2,
+            self.exit_button.centery - exit_text.get_height() // 2
+        ))
