@@ -21,6 +21,7 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
     ui.dealer_hand.clear()
     
     ui.bet_number = 0
+    betted_money = 0
     
     # Bet loop
     phase = 'bet'
@@ -47,6 +48,10 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
                 elif ui.confirm_bet_box.collidepoint(event.pos):
                     print("Confirm button Pressed")
                     if ui.bet_number <= game.money:
+                        betted_money = ui.bet_number
+                        game.money -= ui.bet_number
+                        game.update_shop_money()
+                        
                         phase = 'done'
                     else:
                         print("Not enough money to place bet")
@@ -123,10 +128,15 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
                     # Winner Logic
                     if dealer_total > 21 or player_total > dealer_total:
                         winner = 'player'
+                        game.money += betted_money * 2
+                        game.update_shop_money()
                     elif dealer_total > player_total:
                         winner = 'dealer'
                     else:
                         winner = 'push'
+                    ui.bet_number = 0
+                    ui.draw(screen)
+                    pygame.display.flip()
                     phase = 'done'
 
         if phase == 'done' and not ui.animating_card:
