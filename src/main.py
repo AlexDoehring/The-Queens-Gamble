@@ -19,6 +19,38 @@ def run_blackjack_ui(screen, player_piece, dealer_piece, blackjack_ui):
     # Clear hands before adding animated cards
     ui.player_hand.clear()
     ui.dealer_hand.clear()
+    
+    # Bet loop
+    phase = 'bet'
+    screen.fill((0, 100, 0))
+    ui.draw(screen)
+    pygame.display.flip()
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if ui.plus_box.collidepoint(event.pos):
+                    print("Plus button Pressed")
+                elif ui.minus_box.collidepoint(event.pos):
+                    print("Minus button Pressed")
+                elif ui.confirm_bet_box.collidepoint(event.pos):
+                    print("Confirm button Pressed")
+                    phase = 'done'
+            if phase == 'done' and not ui.animating_card:
+                running = False
+                # pygame.time.wait(1000)
+                break
+            
+    print("Betting phase done")
+    
+    screen.fill((0, 100, 0))
+    ui.draw(screen)
+    pygame.display.flip()
+    running = True
 
     # Add initial cards with animation and game state
     ui.queue_card(bj_game.player_hand.cards[0], to_dealer=False)
@@ -33,7 +65,7 @@ def run_blackjack_ui(screen, player_piece, dealer_piece, blackjack_ui):
         screen.fill((0, 100, 0))
         ui.draw(screen)
         pygame.display.flip()
-
+        running = True
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()

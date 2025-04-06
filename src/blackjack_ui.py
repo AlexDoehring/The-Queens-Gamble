@@ -13,6 +13,9 @@ class BlackjackUI:
         self.stand_button = pygame.Rect(290, HEIGHT - 85, 100, 75)
         self.input_box = pygame.Rect(120, HEIGHT - 85, 50, 75)
         self.bet_box = pygame.Rect(10, HEIGHT - 85, 190, 75)
+        self.confirm_bet_box = pygame.Rect(10, HEIGHT - 85, 80, 75)
+        self.plus_box = pygame.Rect(self.bet_box.x + 155, self.bet_box.y + 20, 20, 20)
+        self.minus_box = pygame.Rect(self.bet_box.x + 155, self.bet_box.y + 37, 20, 20)
 
         self.player_hand = []
         self.dealer_hand = []
@@ -170,11 +173,21 @@ class BlackjackUI:
 
         if self.bet_img:
             screen.blit(self.bet_img, self.bet_box.topleft)
+            screen.blit(self.bet_img, self.confirm_bet_box.topleft)
+            # pygame.draw.rect(screen, (255, 255, 255), self.confirm_bet_box, 2)
         else:
             pygame.draw.rect(screen, (255, 255, 255), self.bet_box, 2)
 
         bet_surface = self.font.render(self.bet_amount, True, (0, 0, 0))
         screen.blit(bet_surface, (self.bet_box.x + 100, self.bet_box.y + 5))
+        
+        plusminusfont = pygame.font.SysFont('monospace', 30, bold=True)
+        plustext = plusminusfont.render("+", True, (255, 255, 255))
+        minustext = plusminusfont.render("-", True, (255, 255, 255))
+        screen.blit(plustext, (self.bet_box.x + 155, self.bet_box.y + 15))
+        screen.blit(minustext, (self.bet_box.x + 155, self.bet_box.y + 32))
+        # pygame.draw.rect(screen, (255, 255, 255), self.plus_box, 1)
+        # pygame.draw.rect(screen, (255, 255, 255), self.minus_box, 1)
 
         if self.hit_img_rest and self.hit_img_push:
             image = self.hit_img_push if self.hit_pressed else self.hit_img_rest
