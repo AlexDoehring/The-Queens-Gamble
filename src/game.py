@@ -22,7 +22,7 @@ class Game:
         self.board = Board()
         self.dragger = Dragger()
         self.config = Config()
-        self.money = 100
+        self.money = 15
         self.shop = ShopUI(self.money)
         self.ai = ChessAI(self.board)
         self.game_over = False
@@ -114,9 +114,9 @@ class Game:
         self.blackjack_ui.draw(surface)
 
         # Title
-        title_font = pygame.font.SysFont('monospace', 36, bold=True)
-        blackjack_text = title_font.render("Blackjack", True, (255, 255, 255))
-        surface.blit(blackjack_text, (20, 20))
+        title_font = pygame.font.SysFont('monospace', 18, bold=True)
+        blackjack_text = title_font.render("Blackjack Burt", True, (211, 65, 21))
+        surface.blit(blackjack_text, (123, 23))
 
         self.shop.draw(surface)
     
