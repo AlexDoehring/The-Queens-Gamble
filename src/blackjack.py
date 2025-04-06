@@ -26,9 +26,9 @@ class Hand:
         min_total = total + ace_count
 
         # Another total with one ace as 11 (i.e., +10 more)
-        max_total = min_total + 10 if min_total + 10 <= 21 else min_total
+        max_total = min_total + 10
 
-        return [min_total] if max_total == min_total else [min_total, max_total]
+        return [min_total, max_total]
 
 
     def __str__(self):

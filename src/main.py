@@ -40,26 +40,45 @@ def run_blackjack_ui(screen, player_piece, dealer_piece, blackjack_ui):
                 sys.exit()
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                playerAce = True if len(bj_game.player_hand.get_value()) > 1 else False
+                dealerAce = True if len(bj_game.dealer_hand.get_value()) > 1 else False
                 if ui.hit_button.collidepoint(event.pos) and phase == 'player':
                     new_card = bj_game.deck.draw()
                     bj_game.player_hand.add_card(new_card)
                     ui.queue_card(new_card, to_dealer=False)
-
-                    if bj_game.player_hand.get_value() > 21:
+                    
+                    handVal = bj_game.player_hand.get_value()[0] if len(bj_game.player_hand.get_value()) > 1 else min(bj_game.player_hand.get_value())
+                    if handVal > 21:
                         winner = 'dealer'
                         phase = 'done'
 
                 elif ui.stand_button.collidepoint(event.pos) and phase == 'player':
                     ui.reveal_dealer_second = True
 
-                    while bj_game.dealer_hand.get_value() < 17:
-                        card = bj_game.deck.draw()
-                        bj_game.dealer_hand.add_card(card)
-                        ui.queue_card(card, to_dealer=True)
 
-                    player_total = bj_game.player_hand.get_value()
-                    dealer_total = bj_game.dealer_hand.get_value()
+                    if dealerAce:
+                        while max(bj_game.dealer_hand.get_value()) < 17 or (max(bj_game.dealer_hand.get_value()) > 21 and min(bj_game.dealer_hand.get_value()) < 17):
+                            card = bj_game.deck.draw()
+                            bj_game.dealer_hand.add_card(card)
+                            ui.queue_card(card, to_dealer=True)
+                        min_hand = min(bj_game.dealer_hand.get_value())
+                        max_hand = max(bj_game.dealer_hand.get_value())
+                        dealer_total = min_hand if max_hand > 21 else max_hand
+                    else:
+                        while bj_game.dealer_hand.get_value()[0] < 17:
+                            card = bj_game.deck.draw()
+                            bj_game.dealer_hand.add_card(card)
+                            ui.queue_card(card, to_dealer=True)
+                        dealer_total = bj_game.dealer_hand.get_value()[0]
 
+                    if playerAce:
+                        min_hand = min(bj_game.player_hand.get_value())
+                        max_hand = max(bj_game.player_hand.get_value())
+                        player_total = min_hand if max_hand > 21 else max_hand
+                    else:
+                        player_total = bj_game.player_hand.get_value()[0]
+
+                    # Winner Logic
                     if dealer_total > 21 or player_total > dealer_total:
                         winner = 'player'
                     elif dealer_total > player_total:
@@ -81,6 +100,7 @@ class Main:
         pygame.display.set_caption('Chess')
         self.game = Game()
         self.clock = pygame.time.Clock()  # Limit FPS
+    
 
     
 
@@ -224,6 +244,8 @@ class Main:
                                         game.check_king_capture()
                                         print(f"Bounty for piece captured: {captured_piece.bounty}")
                                         game.add_money(captured_piece.bounty)
+                                        dragger.undrag_piece()
+
 
                                 else:
                                     board.move(dragger.piece, move)
@@ -240,6 +262,20 @@ class Main:
                                     board = game.board
                                     dragger = game.dragger
 
+                            dragger.undrag_piece()
+                            
+                            # force full re-draw manually
+                            screen.fill((0, 0, 0))
+                            game.show_side_panels(screen)
+                            game.show_bg(screen)
+                            game.show_last_move(screen)
+                            game.show_moves(screen)
+                            game.show_pieces(screen)
+                            game.show_hover(screen)
+                            pygame.display.update()
+
+                            pygame.time.wait(1000)
+
                             if game.next_player == 'black':
                                 move_result = game.ai.get_move(board)
                                 if move_result is None:
@@ -248,6 +284,8 @@ class Main:
                                     piece, move = move_result
                                 
                                 if piece and move:
+                                    #dragger.undrag_piece()
+                                    
                                     captured = board.squares[move.final.row][move.final.col].has_piece()
                                     if not captured:
                                         board.move(piece, move)
