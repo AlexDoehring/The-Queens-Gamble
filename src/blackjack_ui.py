@@ -2,6 +2,10 @@ import pygame
 import os
 from const import SIDE_PANEL_WIDTH, HEIGHT
 
+# This class is responsible for the UI of the Blackjack game.
+# It handles the rendering of the dealer, player hands, buttons, and other UI elements.
+# It also manages the animations for card dealing and the display of bet amounts.
+# The class is designed to be used within a larger game loop, where it can be updated and drawn on the screen.
 class BlackjackUI:
     def __init__(self):
         self.font = pygame.font.SysFont("monospace", 22, bold=True)
@@ -9,6 +13,7 @@ class BlackjackUI:
         self.active_input = False
         self.reveal_dealer_second = False
 
+        # Button and input box positions
         self.hit_button = pygame.Rect(210, HEIGHT - 85, 75, 75)
         self.stand_button = pygame.Rect(290, HEIGHT - 85, 100, 75)
         self.input_box = pygame.Rect(120, HEIGHT - 85, 50, 75)
@@ -20,6 +25,7 @@ class BlackjackUI:
         self.betnumbertext = None
         self.bet_number = 0
         
+        ## Dealer and player hand positions
         self.total_text = None
         self.dealer_text = None
         self.total_number = "0"
@@ -112,22 +118,27 @@ class BlackjackUI:
             print("Failed to load blackjack background:", e)
             self.background_img = None
 
+        # Initialize the card queue
     def update_hands(self, player_cards, dealer_cards):
         self.player_hand = player_cards
         self.dealer_hand = dealer_cards
 
+     # Update the dealer's score and player's score
     def set_bet_amount(self, amount):
         self.bet_amount = amount
 
+        #Update the bet number and total number displayed on the UI
     def queue_card(self, card, to_dealer=False):
         self.card_queue.append((card, to_dealer))
         self.animating_card = True
 
+        # Update the bet number and total number displayed on the UI
     def render_card(self, screen, card, x, y):
         rect = pygame.Rect(x, y, 70, 105)
         pygame.draw.rect(screen, (255, 255, 255), rect, border_radius=6)
         pygame.draw.rect(screen, (0, 0, 0), rect, 2, border_radius=6)
 
+        # Render the card value and suit
         rank = str(card.getValue()) if card.getRank() not in ["Ace", "Jack", "Queen", "King"] else card.getRank()
         suit = card.getSuit()
         suit_symbols = {
@@ -143,6 +154,7 @@ class BlackjackUI:
         text = self.font.render(label, True, color)
         screen.blit(text, (rect.x + 8, rect.y + 10))
 
+        # Render the card value in the top right corner
     def draw(self, screen):
         if self.background_img:
             screen.blit(self.background_img, (0, 0))
@@ -155,6 +167,7 @@ class BlackjackUI:
         if self.deck_img:
             screen.blit(self.deck_img, (265, self.dealer_y + 95))
 
+        # Draw the dealer's eyes
         mouse_x, mouse_y = pygame.mouse.get_pos()
         for center in [self.eye_left_center, self.eye_right_center]:
             dx = mouse_x - center[0]
@@ -166,6 +179,7 @@ class BlackjackUI:
             pupil_pos = (center[0] + offset_x, center[1] + offset_y)
             pygame.draw.circle(screen, (0, 0, 0), pupil_pos, self.pupil_radius)
 
+        # Draw the dealer's hand
         for i, card in enumerate(self.dealer_hand):
             x = 80 + i * self.card_spacing
             if i == 1 and not self.reveal_dealer_second:
@@ -176,6 +190,7 @@ class BlackjackUI:
             else:
                 self.render_card(screen, card, x, self.dealer_y)
 
+        # Draw the player's hand
         for i, card in enumerate(self.player_hand):
             self.render_card(screen, card, 80 + i * self.card_spacing, self.player_y)
 
@@ -186,6 +201,7 @@ class BlackjackUI:
         else:
             pygame.draw.rect(screen, (255, 255, 255), self.bet_box, 2)
 
+        # Render the bet amount
         bet_surface = self.font.render(self.bet_amount, True, (0, 0, 0))
         screen.blit(bet_surface, (self.bet_box.x + 100, self.bet_box.y + 5))
         
@@ -209,6 +225,7 @@ class BlackjackUI:
         screen.blit(self.dealer_text, (self.bet_box.x + 230, self.bet_box.y - 180))
     
 
+        # Draw the buttons
         if self.hit_img_rest and self.hit_img_push:
             image = self.hit_img_push if self.hit_pressed else self.hit_img_rest
             screen.blit(image, self.hit_button.topleft)

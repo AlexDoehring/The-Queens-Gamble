@@ -1,7 +1,13 @@
 from card import Card
 import random
 
-
+# Deck class
+# This class represents a standard deck of playing cards.
+# It provides methods to shuffle the deck, draw cards, and reshuffle when the deck is empty.
+# It also allows for drawing specific cards if they are available in the deck.
+# The deck is initialized with 52 cards, and the drawn cards are tracked separately.
+# The reshuffle method returns the drawn cards back to the deck and shuffles it.
+# The draw method allows for drawing a specific card or the top card from the deck.
 class Deck:
     def __init__(self):
         ranks = ['Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King', 'Ace']

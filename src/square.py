@@ -1,4 +1,6 @@
-
+# Square class
+# This class represents a square on the chessboard.
+# It contains the row and column indices of the square, as well as the piece on that square.
 class Square:
 
     ALPHACOLS = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}

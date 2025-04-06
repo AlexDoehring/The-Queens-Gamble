@@ -15,6 +15,13 @@ from blackjack import BlackjackGame
 from card import Card
 from speech_bubble import SpeechBubble
 
+# Game class
+# This class is responsible for managing the game state, including the chessboard, pieces, and game logic.
+# It handles user input, updates the game state, and renders the game to the screen.
+# It also manages the side panels for the Blackjack mini-game and the shop UI.
+# The game logic is separated from the UI logic, allowing for better organization and maintainability.
+# The game class also handles the speech bubble for player interactions and messages.
+# It initializes the game with a new board, pieces, and other necessary components.
 class Game:
 
     def __init__(self):
@@ -47,6 +54,7 @@ class Game:
         theme = self.config.theme
         x_offset = SIDE_PANEL_WIDTH
 
+        # Draw the background squares
         for row in range(ROWS):
             for col in range(COLS):
                 color = theme.bg.light if (row + col) % 2 == 0 else theme.bg.dark
@@ -65,6 +73,8 @@ class Game:
                     lbl_pos = (col * SQSIZE + x_offset + SQSIZE - 20, HEIGHT - 20)
                     surface.blit(lbl, lbl_pos)
 
+    # Draw the pieces on the board
+    # This method iterates through the board squares and blits the pieces to the screen.
     def show_pieces(self, surface):
         x_offset = SIDE_PANEL_WIDTH
         for row in range(ROWS):
@@ -78,6 +88,8 @@ class Game:
                         piece.texture_rect = img.get_rect(center=img_center)
                         surface.blit(img, piece.texture_rect)
 
+    # Draw the moves available for the piece being dragged
+    # This method highlights the squares where the piece can move.
     def show_moves(self, surface):
         theme = self.config.theme
         x_offset = SIDE_PANEL_WIDTH
@@ -90,6 +102,8 @@ class Game:
                 rect = (move.final.col * SQSIZE + x_offset, move.final.row * SQSIZE, SQSIZE, SQSIZE)
                 pygame.draw.rect(surface, color, rect)
 
+    # Draw the last move made on the board
+    # This method highlights the squares where the last move was made.
     def show_last_move(self, surface):
         theme = self.config.theme
         x_offset = SIDE_PANEL_WIDTH
@@ -103,6 +117,9 @@ class Game:
                 rect = (pos.col * SQSIZE + x_offset, pos.row * SQSIZE, SQSIZE, SQSIZE)
                 pygame.draw.rect(surface, color, rect)
 
+    # Draw the hover effect on the square being hovered over
+    # This method highlights the square where the mouse is currently hovering.
+    # It provides visual feedback to the user about where they are pointing.
     def show_hover(self, surface):
         x_offset = SIDE_PANEL_WIDTH
 
@@ -111,6 +128,9 @@ class Game:
             rect = (self.hovered_sqr.col * SQSIZE + x_offset, self.hovered_sqr.row * SQSIZE, SQSIZE, SQSIZE)
             pygame.draw.rect(surface, color, rect, width=3)
 
+    # Draw the side panels for the Blackjack mini-game and the shop UI
+    # This method draws the left panel for the Blackjack game and the right panel for the shop UI.
+    # It also draws the dealer image and the speech bubble for player interactions.
     def show_side_panels(self, surface):
         left_panel = pygame.Rect(0, 0, SIDE_PANEL_WIDTH, HEIGHT)
         pygame.draw.rect(surface, (30, 30, 30), left_panel)
@@ -133,6 +153,8 @@ class Game:
 
         self.shop.draw(surface)
 
+    # Various methods to handle game logic and player interactions
+    
     def update_speech_bubble(self, dt):
         self.speech_bubble.update(dt)
 

@@ -6,7 +6,8 @@ from const import *
 import sys
 import math
 
-
+# Shop class
+# This class represents the shop in the game, where players can purchase upgrades and power-ups.
 class Shop:
     def __init__(self):
         self.upgrades = [
@@ -34,7 +35,10 @@ class Shop:
     def change_availability(self):
         self.available = not self.available
         
-                
+# ShopUI class
+# This class represents the user interface for the shop in the game.
+# It handles the display of available upgrades and power-ups, as well as the player's balance.
+# It also manages the interaction with the shop, including button clicks and purchases.
 class ShopUI:
     def __init__(self, money):
         self.shop = Shop()
@@ -67,7 +71,9 @@ class ShopUI:
         except Exception as e:
             print("Failed to load shop buttons:", e)
             self.dealer_img = None
-        
+    
+    # Draw function for the shop UI
+    # This function draws the shop UI on the given surface. It includes the title, balance, upgrades, and power-ups.
     def draw(self, surface):
         right_panel_x = SIDE_PANEL_WIDTH + BOARD_WIDTH
         right_panel = pygame.Rect(right_panel_x, 0, SIDE_PANEL_WIDTH, HEIGHT)
@@ -148,7 +154,7 @@ class ShopUI:
         if self.help_popup:
             surface.blit(self.help_img, (1035,70))
             
-
+    # various methods to handle game logic and player interactions
             
     def get_money(self):
         return self.money
@@ -156,6 +162,10 @@ class ShopUI:
     def set_money(self, money):
         self.money = money
     
+    # This method handles the events for the shop UI, including button clicks and mouse interactions.
+    # It updates the state of the buttons and the visibility of popups based on user interactions.
+    # It also manages the purchase of upgrades and power-ups, checking for sufficient funds and availability.
+
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
 

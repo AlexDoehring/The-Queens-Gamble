@@ -1,3 +1,6 @@
+# Upgrade class
+# This class represents an upgrade that can be purchased in the shop.
+# It contains the name, description, cost, and level of the upgrade.
 class Upgrade:
     def __init__(self, name: str, description: str, cost: int):
         self.name = name

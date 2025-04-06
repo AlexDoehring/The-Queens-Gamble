@@ -1,3 +1,5 @@
+# Color class
+# This class is used to define colors for the app.
 class Color:
 
     def __init__(self, light, dark):

@@ -1,3 +1,7 @@
+# This file contains constants used in the game.
+# It includes the dimensions of the game board, the size of squares, and the number of rows and columns.
+# It also defines the width of the side panels and the total width and height of the game window.
+
 SIDE_PANEL_WIDTH = 400
 SQSIZE = 80
 COLS = 8

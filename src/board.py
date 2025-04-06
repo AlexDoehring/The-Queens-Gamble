@@ -6,6 +6,11 @@ from sound import Sound
 import copy
 import os
 
+# Board class
+# This class represents the chess board and handles the game logic
+# It contains methods for moving pieces, calculating valid moves, and checking for check/checkmate conditions.
+# It also manages the state of the board, including the positions of all pieces and the last move made.
+# It is responsible for the game rules and logic, but does not handle any rendering or display logic.
 class Board:
 
     def __init__(self):

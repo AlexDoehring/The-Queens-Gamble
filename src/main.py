@@ -9,6 +9,15 @@ from square import Square
 from move import Move
 import time
 
+# This function handles the Blackjack UI and game logic.
+# It initializes the game, manages the betting phase, and handles player actions (hit/stand).
+# It also manages the dealer's actions and determines the winner of the round.
+# The function takes the screen, game instance, player and dealer pieces, and the Blackjack UI as parameters.
+# The function returns the result of the round (player, dealer, or push).
+# It uses the BlackjackGame class to manage the game state and the BlackjackUI class to handle the UI elements.
+# The function also handles the animation of cards being dealt and the display of the player's and dealer's hands.
+# It uses the Pygame library for rendering and event handling.
+
 def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
     bj_game = BlackjackGame()
     ui = blackjack_ui
@@ -62,6 +71,7 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
             
     print("Betting phase done")
     
+    # Screen fill used to clear the screen before drawing the cards
     screen.fill((0, 100, 0))
     ui.draw(screen)
     pygame.display.flip()
@@ -81,6 +91,8 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
     else:
         ui.total_number = str(bj_game.player_hand.get_value()[0])
 
+    # Game loop for player actions (hit/stand)
+    # The player can hit (draw a card) or stand (end their turn).
     while True:
         screen.fill((0, 100, 0))
         ui.draw(screen)
@@ -149,6 +161,14 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
             return winner
 
 
+# Main class
+# This class initializes the Pygame library, sets up the game window, and manages the main game loop.
+# It handles user input, updates the game state, and renders the game graphics.
+# It also manages the game over screen and the main menu.
+# The main class is responsible for starting the game and handling the game flow.
+# It initializes the game with a new instance of the Game class and manages the game loop.
+# The main class also handles the FPS (frames per second) and manages the game clock.
+# It uses the Pygame library for rendering and event handling.
 class Main:
 
     def __init__(self):
@@ -158,9 +178,8 @@ class Main:
         self.game = Game()
         self.clock = pygame.time.Clock()  # Limit FPS
     
-
-    
-
+    # This method displays the game over screen when the game ends.
+    # It shows the winner and provides options to play again or exit the game.
     def show_game_over_screen(self, winner):
         font = pygame.font.SysFont('monospace', 48, bold=True)
         small_font = pygame.font.SysFont('monospace', 36)
@@ -168,7 +187,8 @@ class Main:
         overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
         overlay.fill((15, 90, 120, 180))  # black with 70% opacity
 
-
+        # This loop handles the game over screen display and user input for replay or exit.
+        # It waits for the user to click on the "Play Again" or "Exit" buttons.
         while True:
 
             screen.blit(overlay, (0, 0))
@@ -208,7 +228,9 @@ class Main:
                         pygame.quit()
                         sys.exit()
 
-
+    # This method is the main game loop.
+    # It handles user input, updates the game state, and renders the game graphics.
+    # It also manages the game over screen and the main menu.
     def mainloop(self):
         # start_time = time.time()
 

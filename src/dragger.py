@@ -2,6 +2,10 @@ import pygame
 
 from const import *
 
+# Dragger class
+# This class is responsible for handling the dragging of pieces on the board.
+# It manages the piece being dragged, its position, and whether it is currently being dragged.
+# It also handles the blitting of the piece texture to the screen at the correct position.
 class Dragger:
 
     def __init__(self):
@@ -13,7 +17,6 @@ class Dragger:
         self.initial_col = 0
 
     # blit method
-
     def update_blit(self, surface):
         # texture
         self.piece.set_texture(size=128)
