@@ -9,7 +9,7 @@ from square import Square
 from move import Move
 import time
 
-def run_blackjack_ui(screen, player_piece, dealer_piece, blackjack_ui):
+def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
     bj_game = BlackjackGame()
     ui = blackjack_ui
     ui.reveal_dealer_second = False
@@ -19,6 +19,49 @@ def run_blackjack_ui(screen, player_piece, dealer_piece, blackjack_ui):
     # Clear hands before adding animated cards
     ui.player_hand.clear()
     ui.dealer_hand.clear()
+    
+    ui.bet_number = 9
+    # ui.update_bet_number(screen, ui.bet_number)
+    
+    # Bet loop
+    phase = 'bet'
+    screen.fill((0, 100, 0))
+    ui.draw(screen)
+    pygame.display.flip()
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if ui.plus_box.collidepoint(event.pos):
+                    ui.bet_number += 1
+                    ui.update_bet_number(screen, ui.bet_number)
+                    # print("Plus button Pressed")
+                elif ui.minus_box.collidepoint(event.pos):
+                    if ui.bet_number > 0:
+                        ui.bet_number -= 1
+                        ui.update_bet_number(screen, ui.bet_number)
+                    # print("Minus button Pressed")
+                elif ui.confirm_bet_box.collidepoint(event.pos):
+                    print("Confirm button Pressed")
+                    if ui.bet_number <= game.money:
+                        phase = 'done'
+                    else:
+                        print("Not enough money to place bet")
+            if phase == 'done' and not ui.animating_card:
+                running = False
+                # pygame.time.wait(1000)
+                break
+            
+    print("Betting phase done")
+    
+    screen.fill((0, 100, 0))
+    ui.draw(screen)
+    pygame.display.flip()
+    running = True
 
     # Add initial cards with animation and game state
     ui.queue_card(bj_game.player_hand.cards[0], to_dealer=False)
@@ -33,7 +76,7 @@ def run_blackjack_ui(screen, player_piece, dealer_piece, blackjack_ui):
         screen.fill((0, 100, 0))
         ui.draw(screen)
         pygame.display.flip()
-
+        running = True
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -225,18 +268,22 @@ class Main:
 
                                 # Trigger Blackjack if the captured piece is black (AI-controlled)
                                 if captured_piece and captured_piece.color == 'black':
+                                    self.game.say_to_player("Let's play some cards!")
                                     print(f"You are about to capture a {captured_piece.name}. Let's play Blackjack first!")
                                     
-                                    result = run_blackjack_ui(self.screen, dragger.piece.name, captured_piece.name, self.game.blackjack_ui)
+                                    result = run_blackjack_ui(self.screen, self.game, dragger.piece.name, captured_piece.name, self.game.blackjack_ui)
                                     # result = bj.play_round()
 
                                     print(f"Blackjack result: {result}")
                                     
                                     if result != 'player':
-                                        print("You lost the Blackjack game. Capture is denied.") if result == 'dealer' else print("It's a push. Capture is denied.")
+                                        msg = "Hmph. Try that again." if result == 'dealer' else "That was close... but not enough."
+                                        self.game.say_to_player(msg)
+
                                         dragger.undrag_piece()       # Return piece to original square
                                         game.next_turn()             # Switch to black's turn
                                     else:
+                                        self.game.say_to_player("Hmm, you win this one.")
                                         board.move(dragger.piece, move)
                                         board.set_true_en_passant(dragger.piece)
                                         game.play_sound(captured)
@@ -273,6 +320,9 @@ class Main:
                             game.show_moves(screen)
                             game.show_pieces(screen)
                             game.show_hover(screen)
+
+                            game.update_speech_bubble(self.clock.get_time())  # Add this just before pygame.display.update()
+
                             pygame.display.update()
 
                             pygame.time.wait(1000)
@@ -309,6 +359,7 @@ class Main:
                                         # print(f'Luck: {luck}, Probability: {piece.prob}, Random: {prob}, Result: {win_capture}')
                                         # print(f"Adjusted Probability: {newProb}")
                                         if win_capture:
+                                            self.game.say_to_player("My move...")
                                             board.move(piece, move)
                                             board.set_true_en_passant(piece)
                                             game.play_sound(captured)
@@ -322,10 +373,9 @@ class Main:
                                                 board = game.board
                                                 dragger = game.dragger
                                         else:
+                                            self.game.say_to_player("Nice defense.")
                                             game.next_turn()
                                                                       
-
-                    
                     dragger.undrag_piece()
 
                 elif event.type == pygame.KEYDOWN:
@@ -342,6 +392,7 @@ class Main:
                     pygame.quit()
                     sys.exit()
 
+            game.update_speech_bubble(self.clock.get_time())  # Add this just before pygame.display.update()
             pygame.display.update()
             # FPS calculation
             # frame_time = time.time() - start_time

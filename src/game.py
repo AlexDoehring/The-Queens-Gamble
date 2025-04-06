@@ -13,6 +13,7 @@ from powerup import PowerUp
 from blackjack_ui import BlackjackUI
 from blackjack import BlackjackGame
 from card import Card
+from speech_bubble import SpeechBubble
 
 class Game:
 
@@ -27,6 +28,10 @@ class Game:
         self.ai = ChessAI(self.board)
         self.game_over = False
         self.blackjack_ui = BlackjackUI()
+        self.speech_bubble = SpeechBubble()
+
+        # Start screen Bubble
+        self.speech_bubble.say("Blackjack Burt is online.")
 
         # Preload textures once
         self.texture_cache = {}
@@ -110,8 +115,16 @@ class Game:
         left_panel = pygame.Rect(0, 0, SIDE_PANEL_WIDTH, HEIGHT)
         pygame.draw.rect(surface, (30, 30, 30), left_panel)
 
+        # Draw dealer image (Blackjack Burt)
+        if self.blackjack_ui and self.blackjack_ui.dealer_img:
+            surface.blit(self.blackjack_ui.dealer_img, (-10, 0))
+
         # Draw the Blackjack UI panel
-        self.blackjack_ui.draw(surface)
+        if self.blackjack_ui:
+            self.blackjack_ui.draw(surface)
+
+        # Draw speech bubble OVER the robot
+        self.speech_bubble.draw(surface)
 
         # Title
         title_font = pygame.font.SysFont('monospace', 18, bold=True)
@@ -119,10 +132,19 @@ class Game:
         surface.blit(blackjack_text, (123, 23))
 
         self.shop.draw(surface)
-    
+
+    def update_speech_bubble(self, dt):
+        self.speech_bubble.update(dt)
+
+    def say_to_player(self, message, duration=None):
+        self.speech_bubble.say(message)
     
     def add_money(self, amount):
         self.money += amount
+        self.update_shop_money()
+        
+    def sub_money(self, amount):
+        self.money -= amount
         self.update_shop_money()
 
     def update_shop_money(self):
