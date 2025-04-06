@@ -1,6 +1,11 @@
 import pygame
 import os
 
+# SpeechBubble class
+# This class is responsible for displaying a speech bubble with a message.
+# It handles loading the image, rendering the text, and drawing the bubble on the screen.
+# The speech bubble is always visible and does not require updates for animations or transitions.
+# The message can be set using the say method, and the bubble is drawn at a fixed position on the screen.
 class SpeechBubble:
     def __init__(self):
         self.image = None
@@ -43,6 +48,8 @@ class SpeechBubble:
             text = self.font.render(line, True, (0, 0, 0))
             screen.blit(text, (x + text_padding_x, start_y + i * line_height))
 
+    # Wrap text to fit within a specified width
+    # This method splits the text into lines that fit within the specified space.
     def wrap_text(self, text, font, max_width):
         words = text.split(' ')
         lines = []

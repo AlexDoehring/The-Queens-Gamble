@@ -2,6 +2,10 @@ import random
 from piece import Piece
 import copy 
 
+# ChessAI class
+# This class implements a simple chess AI using the Minimax algorithm.
+# It evaluates the game state and selects the best move for the AI player.
+
 class ChessAI:
     def __init__(self, board, depth = 1):
         self.depth = depth
@@ -9,7 +13,7 @@ class ChessAI:
         #self.game = game
         #self.piece = Piece()
 
-
+    # Evaluate the board state and assign a score based on the pieces' values.
     def evaluate(self, board, maximizing_color):
         score = 0
         for row in board.squares:
@@ -29,6 +33,9 @@ class ChessAI:
                         score -= value
         return score
 
+    # Minimax algorithm implementation
+    # This function recursively explores the game tree to find the best move.
+    # It alternates between maximizing and minimizing the score based on the current player.
     def minimax(self, board, depth, maximizing):
         if depth == 0:
             return self.evaluate(board, 'black'), None
@@ -58,6 +65,7 @@ class ChessAI:
             return min_eval, best_move
 
 
+    # Get the best move for the AI player based on the current game state.
     def get_move(self, state):
         """Returns the best move from the current game state."""
         _, move = self.minimax(state, self.depth, maximizing = True)

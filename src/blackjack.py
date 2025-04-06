@@ -4,6 +4,11 @@ from piece import Piece
 import random
 import time
 
+# This class manajes the blackjack game logic
+# and the player/dealer hands. It is not a UI class, so it does not handle any rendering or display logic.
+# It is responsible for managing the game state, including dealing cards, calculating hand values, and determining the winner.
+# It can be used in a larger game context, such as a chess game, where the player can play blackjack as a mini-game.
+
 class Hand:
     def __init__(self):
         self.cards = []

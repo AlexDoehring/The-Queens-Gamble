@@ -1,3 +1,6 @@
+# PowerUp class
+# This was intended to be a placeholder for the PowerUp class.
+# Development discontinued due to lack of time and resources.
 class PowerUp:
     def __init__(self, name, description, cost, amount_left=5):
         self.name = name

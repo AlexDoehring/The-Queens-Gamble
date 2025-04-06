@@ -4,6 +4,11 @@ import os
 from sound import Sound
 from theme import Theme
 
+# This is a configuration class for a game, specifically for the themes and sounds used in the game.
+# It initializes the themes and sounds, and provides a method to change the theme.
+# The themes are defined with specific colors for light and dark squares, as well as colors for the pieces.
+# The sounds are loaded from specific file paths.
+# The class also provides a method to change the theme, cycling through the available themes.
 class Config:
 
     def __init__(self):

@@ -1,3 +1,6 @@
+# Card class
+# This class represents a playing card with a suit and rank.
+# It provides methods to get the suit, rank, and value of the card, as well as comparison methods for sorting and equality checks.
 class Card:
     def __init__(self, suit, rank):
         self._suit = suit

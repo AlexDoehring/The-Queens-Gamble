@@ -1,3 +1,9 @@
+# Move class
+# This class represents a move in the game of chess
+# It contains the initial and final squares of the move.
+# It also provides methods to compare moves for equality.
+# The Move class is used to track the movement of pieces on the chessboard.
+# It is initialized with the initial and final squares of the move.
 
 class Move:
 

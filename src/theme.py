@@ -1,5 +1,8 @@
 from color import Color
 
+# Theme class
+# This class is used to define the theme for the app.
+# It includes colors for the background, traces, and moves.
 class Theme:
 
     def __init__(self, light_bg, dark_bg, 

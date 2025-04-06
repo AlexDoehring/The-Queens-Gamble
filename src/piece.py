@@ -1,5 +1,9 @@
 import os
 
+# Piece class
+# This class represents a chess piece. It contains attributes like name, color, value, and moves.
+# It also contains methods to set the texture of the piece and manage its moves.
+# The Piece class is the base class for all chess pieces.
 class Piece:
 
     def __init__(self, name, color, value, prob, bounty=0, texture=None, texture_rect=None):
