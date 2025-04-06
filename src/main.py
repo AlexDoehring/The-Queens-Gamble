@@ -20,8 +20,7 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
     ui.player_hand.clear()
     ui.dealer_hand.clear()
     
-    ui.bet_number = 9
-    # ui.update_bet_number(screen, ui.bet_number)
+    ui.bet_number = 0
     
     # Bet loop
     phase = 'bet'
@@ -38,13 +37,13 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if ui.plus_box.collidepoint(event.pos):
                     ui.bet_number += 1
-                    ui.update_bet_number(screen, ui.bet_number)
-                    # print("Plus button Pressed")
+                    ui.draw(screen)
+                    pygame.display.flip()
                 elif ui.minus_box.collidepoint(event.pos):
                     if ui.bet_number > 0:
                         ui.bet_number -= 1
-                        ui.update_bet_number(screen, ui.bet_number)
-                    # print("Minus button Pressed")
+                        ui.draw(screen)
+                        pygame.display.flip()
                 elif ui.confirm_bet_box.collidepoint(event.pos):
                     print("Confirm button Pressed")
                     if ui.bet_number <= game.money:

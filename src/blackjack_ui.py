@@ -222,8 +222,8 @@ class BlackjackUI:
                 self.animating_card = False
         
         
-    def update_bet_number(self, screen, amount):
-        print("Updating bet number to:", amount)
-        betnumberfont = pygame.font.SysFont('monospace', 70, bold=True)
-        self.betnumbertext = betnumberfont.render(str(amount), True, (255, 255, 255))
-        screen.blit(self.betnumbertext, (self.bet_box.x + 120, self.bet_box.y + 12))    
+    # def update_bet_number(self, screen, amount):
+    #     print("Updating bet number to:", amount)
+    #     betnumberfont = pygame.font.SysFont('monospace', 70, bold=True)
+    #     self.betnumbertext = betnumberfont.render(str(amount), True, (255, 255, 255))
+    #     screen.blit(self.betnumbertext, (self.bet_box.x + 120, self.bet_box.y + 12))    

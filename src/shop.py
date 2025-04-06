@@ -44,14 +44,21 @@ class ShopUI:
         self.buttons_pressed = [False for _ in range(len(self.shop.available_upgrades()) + len(self.shop.available_powerups()))]
         self.info_button = None
         self.popup_visible = False
+        self.help_popup = False
 
         try:
             image_path = os.path.join("assets", "images", "shop", "button.png")
             self.button_img = pygame.image.load(image_path)
             self.button_img = pygame.transform.scale(self.button_img, (SIDE_PANEL_WIDTH - 220, 38))
+            image_path = os.path.join("assets", "images", "shop", "help_popup.png")
+            self.help_img = pygame.image.load(image_path)
+            self.help_img = pygame.transform.scale(self.help_img, (400, 560))
             image_path = os.path.join("assets", "images", "shop", "info_popup.png")
             self.info_img = pygame.image.load(image_path).convert_alpha()
             self.info_img = pygame.transform.scale(self.info_img, (425, 516))
+            image_path = os.path.join("assets", "images", "shop", "desc_popup2.png")
+            self.description_img = pygame.image.load(image_path).convert_alpha()
+            self.description_img = pygame.transform.scale(self.description_img, (400, 640))
             image_path = os.path.join("assets", "images", "shop", "buttonPressed.png")
             self.button_pressed_img = pygame.image.load(image_path)
             self.button_pressed_img = pygame.transform.scale(self.button_pressed_img, (SIDE_PANEL_WIDTH - 220, 38))
@@ -117,19 +124,30 @@ class ShopUI:
         font = pygame.font.SysFont("Courier New", 25, bold=True)
 
         self.circle_radius = 15
-        self.info_center = (1400,40)
+        self.info_center = (1375, 40)
         # Render "i"
-        text = font.render("i", True, 'WHITE')
-        text_rect = text.get_rect(center=self.info_center)
+        text2 = font.render("i", True, 'WHITE')
+        text = font.render("H", True, 'BLACK')
+        text2_rect = text2.get_rect(center=self.info_center)
+        text_rect = text.get_rect(center = (1412,40))
         
         self.info_button = pygame.draw.circle(surface, 'BLACK', self.info_center, self.circle_radius)
-        # Blit the "i"
+        help_rect = pygame.Rect(1400, 20, 25, 40)
+        self.help_button = pygame.draw.rect(surface, (245, 245, 220), help_rect) # Fill
+        pygame.draw.rect(surface, (200, 200, 200), help_rect, width=2) # Border
+
+        # Blit the "i" and "H"
         surface.blit(text, text_rect)
+        surface.blit(text2, text2_rect)
         #surface.blit(self.info_img, (200, 100))
 
         if self.popup_visible:
-            #pygame.draw.rect(surface, (255, 255, 255), (200, 100, 200, 150))  # white background for contrast
             surface.blit(self.info_img, (1030,70))
+            surface.blit(self.description_img, (0,0))
+        
+        if self.help_popup:
+            surface.blit(self.help_img, (1035,70))
+            
 
             
     def get_money(self):
@@ -140,8 +158,13 @@ class ShopUI:
     
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
+
             if self.info_button.collidepoint(event.pos):
                 self.popup_visible = not self.popup_visible
+
+            if self.help_button.collidepoint(event.pos):
+                self.help_popup = not self.help_popup
+
             for i in range(len(self.shop.available_upgrades())):
                 button = self.upgrade_buttons[i]
                 upgrade = self.shop.available_upgrades()[i]
