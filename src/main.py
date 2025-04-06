@@ -142,6 +142,7 @@ class Main:
                 # Let blackjack panel handle its own input
                 game.shop.handle_event(event)  # Handle shop UI events
                 game.update_game_money()  # Update money in the shop
+                
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     dragger.update_mouse(event.pos)

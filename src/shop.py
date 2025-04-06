@@ -3,6 +3,9 @@ import os
 from upgrade import Upgrade
 from powerup import PowerUp
 from const import *
+import sys
+import math
+
 
 class Shop:
     def __init__(self):
@@ -39,11 +42,16 @@ class ShopUI:
         self.powerup_buttons = []
         self.money = money
         self.buttons_pressed = [False for _ in range(len(self.shop.available_upgrades()) + len(self.shop.available_powerups()))]
-        
+        self.info_button = None
+        self.popup_visible = False
+
         try:
             image_path = os.path.join("assets", "images", "shop", "button.png")
             self.button_img = pygame.image.load(image_path)
             self.button_img = pygame.transform.scale(self.button_img, (SIDE_PANEL_WIDTH - 220, 38))
+            image_path = os.path.join("assets", "images", "shop", "info_popup.png")
+            self.info_img = pygame.image.load(image_path).convert_alpha()
+            self.info_img = pygame.transform.scale(self.info_img, (420, 561))
             image_path = os.path.join("assets", "images", "shop", "buttonPressed.png")
             self.button_pressed_img = pygame.image.load(image_path)
             self.button_pressed_img = pygame.transform.scale(self.button_pressed_img, (SIDE_PANEL_WIDTH - 220, 38))
@@ -104,6 +112,25 @@ class ShopUI:
             surface.blit(powerup_text, (right_panel_x + 25, 400 + self.shop.available_powerups().index(pup) * 50))
             left_button_rect = pygame.Rect(right_panel_x + 15, 395 + self.shop.available_powerups().index(pup) * 50, SIDE_PANEL_WIDTH - 230, 35)
             self.powerup_buttons.append(left_button_rect)
+
+        #get font for "i"
+        font = pygame.font.SysFont("Courier New", 25, bold=True)
+
+        self.circle_radius = 15
+        self.info_center = (1400,40)
+        # Render "i"
+        text = font.render("i", True, 'WHITE')
+        text_rect = text.get_rect(center=self.info_center)
+        
+        self.info_button = pygame.draw.circle(surface, 'BLACK', self.info_center, self.circle_radius)
+        # Blit the "i"
+        surface.blit(text, text_rect)
+        #surface.blit(self.info_img, (200, 100))
+
+        if self.popup_visible:
+            #pygame.draw.rect(surface, (255, 255, 255), (200, 100, 200, 150))  # white background for contrast
+            surface.blit(self.info_img, (1040,70))
+
             
     def get_money(self):
         return self.money
@@ -113,6 +140,8 @@ class ShopUI:
     
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.info_button.collidepoint(event.pos):
+                self.popup_visible = not self.popup_visible
             for i in range(len(self.shop.available_upgrades())):
                 button = self.upgrade_buttons[i]
                 upgrade = self.shop.available_upgrades()[i]
@@ -143,3 +172,7 @@ class ShopUI:
         if event.type == pygame.MOUSEBUTTONUP:
             for i in range(len(self.buttons_pressed)):
                 self.buttons_pressed[i] = False
+
+
+    """def call_popup(self):
+        surface.blit(self.info_img, (200, 100))"""
