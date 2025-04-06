@@ -192,9 +192,9 @@ class BlackjackUI:
         # pygame.draw.rect(screen, (255, 255, 255), self.plus_box, 1)
         # pygame.draw.rect(screen, (255, 255, 255), self.minus_box, 1)
         
-        betnumberfont = pygame.font.SysFont('monospace', 50, bold=True)
+        betnumberfont = pygame.font.SysFont('monospace', 40, bold=True)
         self.betnumbertext = betnumberfont.render(str(self.bet_number), True, (255, 255, 255))
-        screen.blit(self.betnumbertext, (self.bet_box.x + 120, self.bet_box.y + 12))
+        screen.blit(self.betnumbertext, (self.bet_box.x + 110, self.bet_box.y + 16))
     
 
         if self.hit_img_rest and self.hit_img_push:
