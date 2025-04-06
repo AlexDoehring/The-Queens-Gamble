@@ -1,4 +1,7 @@
 from deck import Deck
+from card import Card
+from piece import Piece
+import random
 
 class Hand:
     def __init__(self):
@@ -24,12 +27,47 @@ class BlackjackGame:
         self.player_hand = Hand()
         self.dealer_hand = Hand()
 
-    def start_round(self, player_card=None, dealer_card=None):
+    def start_round(self, player_piece=None, dealer_piece=None):
         self.player_hand = Hand()
         self.dealer_hand = Hand()
         self.deck.reshuffle()
 
         # Optional: use mapped cards (e.g., from a chess piece capture)
+        suit = random.choice(['Hearts', 'Diamonds', 'Clubs', 'Spades'])
+        match player_piece:
+            case 'pawn':
+                player_card = random.choice([Card(suit, "Four"), Card(suit, "Five"), Card(suit, "Six")])
+            case 'knight':
+                player_card = random.choice([Card(suit, "Two"), Card(suit, "Three"), Card(suit, "Seven")])
+            case 'bishop':
+                player_card = random.choice([Card(suit, "Two"), Card(suit, "Three"), Card(suit, "Seven")])
+            case 'rook':
+                player_card = random.choice([Card(suit, "Eight"), Card(suit, "Nine")])
+            case 'queen':
+                player_card = random.choice([Card(suit, "Ten"), Card(suit, "Jack"), Card(suit, "Queen"), Card(suit, "King")])
+            case 'king':
+                player_card = Card(suit, "Ace")
+            case _:
+                raise ValueError("Invalid piece type")
+            
+        suit = random.choice(['Hearts', 'Diamonds', 'Clubs', 'Spades'])
+        match dealer_piece:
+            case 'pawn':
+                dealer_card = random.choice([Card(suit, "Four"), Card(suit, "Five"), Card(suit, "Six")])
+            case 'knight':
+                dealer_card = random.choice([Card(suit, "Two"), Card(suit, "Three"), Card(suit, "Seven")])
+            case 'bishop':
+                dealer_card = random.choice([Card(suit, "Two"), Card(suit, "Three"), Card(suit, "Seven")])
+            case 'rook':
+                dealer_card = random.choice([Card(suit, "Eight"), Card(suit, "Nine")])
+            case 'queen':
+                dealer_card = random.choice([Card(suit, "Ten"), Card(suit, "Jack"), Card(suit, "Queen"), Card(suit, "King")])
+            case 'king':
+                dealer_card = Card(suit, "Ace")
+            case _:
+                raise ValueError("Invalid piece type")
+            
+        
         self.player_hand.add_card(player_card or self.deck.draw())
         self.player_hand.add_card(self.deck.draw())
         self.dealer_hand.add_card(dealer_card or self.deck.draw())
