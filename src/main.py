@@ -40,26 +40,45 @@ def run_blackjack_ui(screen, player_piece, dealer_piece, blackjack_ui):
                 sys.exit()
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                playerAce = True if len(bj_game.player_hand.get_value()) > 1 else False
+                dealerAce = True if len(bj_game.dealer_hand.get_value()) > 1 else False
                 if ui.hit_button.collidepoint(event.pos) and phase == 'player':
                     new_card = bj_game.deck.draw()
                     bj_game.player_hand.add_card(new_card)
                     ui.queue_card(new_card, to_dealer=False)
-
-                    if bj_game.player_hand.get_value() > 21:
+                    
+                    handVal = bj_game.player_hand.get_value()[0] if len(bj_game.player_hand.get_value()) > 1 else min(bj_game.player_hand.get_value())
+                    if handVal > 21:
                         winner = 'dealer'
                         phase = 'done'
 
                 elif ui.stand_button.collidepoint(event.pos) and phase == 'player':
                     ui.reveal_dealer_second = True
 
-                    while bj_game.dealer_hand.get_value() < 17:
-                        card = bj_game.deck.draw()
-                        bj_game.dealer_hand.add_card(card)
-                        ui.queue_card(card, to_dealer=True)
 
-                    player_total = bj_game.player_hand.get_value()
-                    dealer_total = bj_game.dealer_hand.get_value()
+                    if dealerAce:
+                        while max(bj_game.dealer_hand.get_value()) < 17 or (max(bj_game.dealer_hand.get_value()) > 21 and min(bj_game.dealer_hand.get_value()) < 17):
+                            card = bj_game.deck.draw()
+                            bj_game.dealer_hand.add_card(card)
+                            ui.queue_card(card, to_dealer=True)
+                        min_hand = min(bj_game.dealer_hand.get_value())
+                        max_hand = max(bj_game.dealer_hand.get_value())
+                        dealer_total = min_hand if max_hand > 21 else max_hand
+                    else:
+                        while bj_game.dealer_hand.get_value()[0] < 17:
+                            card = bj_game.deck.draw()
+                            bj_game.dealer_hand.add_card(card)
+                            ui.queue_card(card, to_dealer=True)
+                        dealer_total = bj_game.dealer_hand.get_value()[0]
 
+                    if playerAce:
+                        min_hand = min(bj_game.player_hand.get_value())
+                        max_hand = max(bj_game.player_hand.get_value())
+                        player_total = min_hand if max_hand > 21 else max_hand
+                    else:
+                        player_total = bj_game.player_hand.get_value()[0]
+
+                    # Winner Logic
                     if dealer_total > 21 or player_total > dealer_total:
                         winner = 'player'
                     elif dealer_total > player_total:
