@@ -1,81 +1,76 @@
+
 # ♛ The Queen's Gamble: Chess × Blackjack
 
-**The Queen’s Gamble** is a strategy-packed mashup of **classic chess** and **thrilling blackjack**. Every time you attempt to capture a piece, you must win a hand of blackjack to seal the deal. Whether you're a tactician or a risk-taker, this game challenges both brains and luck.
+**The Queen’s Gamble** is a bold fusion of **classic chess strategy** and the **high-stakes thrill of blackjack**. Every attempted capture triggers a head-to-head card duel — brains meet luck in this one-of-a-kind experience. Whether you’re a sharp tactician or a high-roller, this game will test every facet of your gameplay.
 
 ---
 
-## 🎮 Game Features
+## 🎮 Game Highlights
 
-- ♟️ **Classic Chess Engine**  
-  Standard chess rules including legal moves, special cases like castling, en passant, and promotion.
+- ♟️ **Traditional Chess Engine**  
+  Full chess ruleset, including special moves like castling, en passant, and pawn promotion.
 
-- 🃏 **Blackjack Duels on Capture**  
-  Try to take an opponent's piece? You'll have to win a mini blackjack round to confirm the capture.
+- 🃏 **Blackjack Battles for Captures**  
+  Think you’ve got that piece? Prove it — win a round of blackjack to confirm the capture.
 
-- 🛒 **Upgrade & Power-Up Shop**  
-  - **Upgrades**:  
-    - `Luck`: Reduce AI’s chance of capturing your pieces.  
-    - `Bounty`: Increases reward (money) when you capture pieces.  
-  - **Power-Ups**:  
-    - `T8kBack`: Undo your last move.  
-    - `Redo`: Retry a lost blackjack round.  
-    - `Skip`: Skip the opponent’s turn.
+- 🛍️ **In-Game Shop: Upgrades & Power-Ups**
+  - **Upgrades**  
+    - `Luck`: Decreases the AI’s chances of successfully capturing your pieces.  
+    - `Bounty`: Boosts the money you earn from winning captures.
+  - **Power-Ups**  
+    - `T8kBack`: Undo your last chess move.  
+    - `Redo`: Retry a lost blackjack duel.  
+    - `Skip`: Skip the AI’s next move.
 
 - 🤖 **AI Opponent**  
-  A basic minimax-based AI plays as Black with probabilistic capturing logic that can be influenced by player upgrades.
+  A minimax-powered AI opponent with probabilistic capture logic that’s influenced by player upgrades.
 
-- 🎲 **Custom Card-Deck Logic**  
-  Fully functional deck shuffling, hand evaluation, and animated UI for blackjack.
-
-- 🎨 **Themed UI & Sounds**  
-  Multiple board themes, sound effects for moves and captures, and immersive blackjack visuals.
+- 🎨 **Immersive UI & Audio**  
+  Dynamic board themes, authentic sound effects, and animated blackjack sequences bring the game to life.
 
 ---
 
-## 🧩 Project Structure
+## 🗂️ Project Structure
 
 ```
 The-Queens-Gamble/
+├── src/
+│   ├── main.py               # Game entry point
+│   ├── game.py               # Manages overall game state
+│   ├── board.py              # Chess board + move rules
+│   ├── piece.py              # Piece logic and attributes
+│   ├── move.py               # Move validation
+│   ├── square.py             # Tile logic
+│   ├── ai.py                 # AI logic (minimax)
+│   ├── config.py             # UI/Sound config
+│   ├── theme.py / color.py   # Theme styling
+│   ├── const.py              # UI constants
+│   ├── sound.py              # Audio playback
+│   ├── dragger.py            # Drag-and-drop handling
+│   ├── shop.py               # Upgrade shop logic
+│   ├── upgrade.py            # Upgrade definitions
+│   ├── powerup.py            # Power-up logic
+│   ├── blackjack.py          # Blackjack rules
+│   ├── blackjack_ui.py       # Blackjack UI
+│   ├── deck.py / card.py     # Card handling
 │
-├── main.py                 # Main game loop
-├── game.py                 # Overall game manager and integration
-├── board.py                # Chess board and move logic
-├── piece.py                # Piece definitions and stats (value, bounty, probability)
-├── move.py                 # Move objects and validation
-├── square.py               # Square definitions and logic
-│
-├── ai.py                   # Simple minimax AI
-├── config.py               # Theme and sound configuration
-├── theme.py / color.py     # Theme color configuration
-├── const.py                # Constants for dimensions, UI
-├── sound.py                # Sound playback wrapper
-├── dragger.py              # Drag-and-drop logic for chess pieces
-│
-├── shop.py                 # Shop system and UI
-├── upgrade.py              # Upgrade definitions
-├── powerup.py              # Power-up definitions
-│
-├── blackjack.py            # Blackjack rules and flow
-├── blackjack_ui.py         # UI for Blackjack mini-game
-├── deck.py / card.py       # Card and deck management
-│
-├── assets/                 # Images and sounds
+├── assets/
 │   ├── images/
-│   │   ├── blackjack/      # Blackjack-specific UI graphics
-│   │   ├── shop/           # Shop UI elements
-│   │   └── imgs-80px/      # Chess piece images
+│   │   ├── blackjack/        # Blackjack UI art
+│   │   ├── shop/             # Shop visuals
+│   │   └── imgs-80px/        # Piece sprites
 │   └── sounds/
 │       ├── move.wav
 │       └── capture.wav
 │
-└── README.md               # This file
+└── README.md
 ```
 
 ---
 
-## 🛠️ Setup Instructions
+## 🛠️ How to Run
 
-### 1. Clone the Repository
+### 1. Clone the Repo
 
 ```bash
 git clone https://github.com/AlexDoehring/The-Queens-Gamble
@@ -84,78 +79,78 @@ cd The-Queens-Gamble
 
 ### 2. Install Dependencies
 
-Ensure Python 3.8+ is installed. Then install Pygame:
+Make sure you have **Python 3.8+** installed. Then run:
 
 ```bash
 pip install pygame
 ```
 
-### 3. Run the Game
+### 3. Launch the Game
 
 ```bash
 python src/main.py
 ```
 
-Make sure the `assets/` folder is intact and contains all images and sounds for proper visuals and gameplay.
+Ensure the `assets/` directory remains intact — it contains vital images and sounds.
 
 ---
 
-## 🕹️ Controls & Gameplay
+## 🎮 How to Play
 
-- **Drag and drop** chess pieces to play.
-- Capturing a piece **triggers blackjack** — win the hand to confirm the capture.
-- **Hit** or **Stand** using on-screen buttons.
-- Use the **right panel shop** to buy upgrades or power-ups using in-game money.
-- Press `R` to reset the game or `T` to change the board theme.
-
----
-
-## 💰 Money System
-
-- Start with **$15**.
-- Earn more by winning blackjack duels and capturing pieces.
-- Spend in the shop to improve your odds or manipulate gameplay.
-
-| Upgrade | Effect |
-|---------|--------|
-| **Luck**   | Lowers AI capture probability |
-| **Bounty** | Increases cash reward per capture |
-
-| Power-Up | Effect |
-|----------|--------|
-| **T8kBack** | Undo your last move |
-| **Redo**    | Retry a lost blackjack duel |
-| **Skip**    | Skip the opponent’s turn |
+- **Move pieces** by dragging and dropping.
+- **Capturing a piece?** Win a blackjack round first!
+- Use the **on-screen blackjack controls** to hit or stand.
+- Access the **shop** on the side panel to buy upgrades and power-ups.
+- Press `R` to restart the game or `T` to switch themes.
 
 ---
 
-## 🧠 AI Logic
+## 💸 Money System
 
-- Plays as Black.
-- Uses a depth-1 **minimax** algorithm to evaluate board state.
-- Probabilistic capturing depends on the piece's built-in chance and your **Luck** upgrade.
+- Begin with **$15**
+- Earn money by winning blackjack duels and capturing pieces.
+- Spend money in the shop to gain advantages.
+
+| Upgrade  | Effect                             |
+|----------|------------------------------------|
+| Luck     | Lowers AI’s chance of capturing    |
+| Bounty   | Increases payout per capture       |
+
+| Power-Up | Effect                              |
+|----------|-------------------------------------|
+| T8kBack  | Undo your last move                 |
+| Redo     | Retry a lost blackjack round        |
+| Skip     | Skip the opponent’s next turn       |
 
 ---
 
-## 📸 Screenshots
+## 🧠 AI Overview
 
-*Coming soon: UI previews and gameplay GIFs.*
+- Plays as Black
+- Uses a simple **depth-1 minimax algorithm**
+- Incorporates randomness in capture attempts, influenced by your **Luck** stat
 
 ---
 
-## 🔮 Future Ideas
+## 📸 Previews
 
-- Multiplayer support
-- Smarter AI with adjustable difficulty
+*Coming soon: screenshots and gameplay GIFs!*
+
+---
+
+## 🌟 Future Features
+
+- Multiplayer mode
+- Smarter AI with difficulty levels
 - Online matchmaking
-- Additional card game modes
-- Leaderboards and statistics
+- Alternate card game duels
+- Leaderboards & player stats
 
 ---
 
-## 👑 Credits
+## 👥 Team
 
-Created by:
+Developed by:
 
 - Brett Suhr  
 - Alex Doehring  
@@ -166,5 +161,5 @@ Created by:
 
 ## 📜 License
 
-This project is © 2025 Brett Suhr, Alex Doehring, Nicholas Holmes, and Colin Treanor.  
-All rights reserved. This code may not be copied, distributed, or modified without explicit permission.
+© 2025 Brett Suhr, Alex Doehring, Nicholas Holmes, and Colin Treanor.  
+All rights reserved. Redistribution or modification without permission is prohibited.
