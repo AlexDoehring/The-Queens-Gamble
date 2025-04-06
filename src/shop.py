@@ -51,7 +51,7 @@ class ShopUI:
             self.button_img = pygame.transform.scale(self.button_img, (SIDE_PANEL_WIDTH - 220, 38))
             image_path = os.path.join("assets", "images", "shop", "info_popup.png")
             self.info_img = pygame.image.load(image_path).convert_alpha()
-            self.info_img = pygame.transform.scale(self.info_img, (410, 550))
+            self.info_img = pygame.transform.scale(self.info_img, (425, 516))
             image_path = os.path.join("assets", "images", "shop", "buttonPressed.png")
             self.button_pressed_img = pygame.image.load(image_path)
             self.button_pressed_img = pygame.transform.scale(self.button_pressed_img, (SIDE_PANEL_WIDTH - 220, 38))
@@ -64,7 +64,7 @@ class ShopUI:
     def draw(self, surface):
         right_panel_x = SIDE_PANEL_WIDTH + BOARD_WIDTH
         right_panel = pygame.Rect(right_panel_x, 0, SIDE_PANEL_WIDTH, HEIGHT)
-        pygame.draw.rect(surface, (60, 60, 60), right_panel)
+        pygame.draw.rect(surface, (13, 46, 75), right_panel)
         font = pygame.font.SysFont('monospace', 24, bold=True)
         title_font = pygame.font.SysFont('monospace', 36, bold=True)  # Larger font for the title
         subtitle_font = pygame.font.SysFont('monospace', 28, bold=True)
@@ -129,7 +129,7 @@ class ShopUI:
 
         if self.popup_visible:
             #pygame.draw.rect(surface, (255, 255, 255), (200, 100, 200, 150))  # white background for contrast
-            surface.blit(self.info_img, (1040,70))
+            surface.blit(self.info_img, (1030,70))
 
             
     def get_money(self):
