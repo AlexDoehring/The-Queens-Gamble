@@ -191,8 +191,15 @@ class Main:
                                 if captured_piece and captured_piece.color == 'black':
                                     print(f"You are about to capture a {captured_piece.name}. Let's play Blackjack first!")
 
+<<<<<<< Updated upstream
                                     result = run_blackjack_ui(self.screen, player_card=None, dealer_card=None)
 
+=======
+                                    bj = BlackjackGame()
+                                    
+                                    result = bj.play_round(dragger.piece.name, captured_piece.name)
+                                    # result = bj.play_round()
+>>>>>>> Stashed changes
 
                                     print(f"Blackjack result: {result}")
 
