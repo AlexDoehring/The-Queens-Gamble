@@ -84,7 +84,7 @@ class BlackjackUI:
         pygame.draw.rect(screen, (255, 255, 255), rect, border_radius=6)
         pygame.draw.rect(screen, (0, 0, 0), rect, 2, border_radius=6)
 
-        rank = card.getRank()
+        rank = str(card.getValue()) if card.getRank() not in ["Ace", "Jack", "Queen", "King"] else card.getRank()
         suit = card.getSuit()
         suit_symbols = {
             "Hearts": "♥",
