@@ -11,7 +11,7 @@ class SpeechBubble:
         try:
             path = os.path.join("assets", "images", "blackjack", "speech_bubble.png")
             self.image = pygame.image.load(path).convert_alpha()
-            self.image = pygame.transform.scale(self.image, (200, 160))  # adjust size as needed
+            self.image = pygame.transform.scale(self.image, (200, 140))  # adjust size as needed
         except Exception as e:
             print("Failed to load speech bubble image:", e)
 
