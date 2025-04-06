@@ -139,6 +139,10 @@ class Game:
     def add_money(self, amount):
         self.money += amount
         self.update_shop_money()
+        
+    def sub_money(self, amount):
+        self.money -= amount
+        self.update_shop_money()
 
     def update_shop_money(self):
         self.shop.set_money(self.money)

@@ -9,7 +9,7 @@ from square import Square
 from move import Move
 import time
 
-def run_blackjack_ui(screen, player_piece, dealer_piece, blackjack_ui):
+def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
     bj_game = BlackjackGame()
     ui = blackjack_ui
     ui.reveal_dealer_second = False
@@ -19,6 +19,9 @@ def run_blackjack_ui(screen, player_piece, dealer_piece, blackjack_ui):
     # Clear hands before adding animated cards
     ui.player_hand.clear()
     ui.dealer_hand.clear()
+    
+    ui.bet_number = 9
+    # ui.update_bet_number(screen, ui.bet_number)
     
     # Bet loop
     phase = 'bet'
@@ -34,12 +37,20 @@ def run_blackjack_ui(screen, player_piece, dealer_piece, blackjack_ui):
                 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if ui.plus_box.collidepoint(event.pos):
-                    print("Plus button Pressed")
+                    ui.bet_number += 1
+                    ui.update_bet_number(screen, ui.bet_number)
+                    # print("Plus button Pressed")
                 elif ui.minus_box.collidepoint(event.pos):
-                    print("Minus button Pressed")
+                    if ui.bet_number > 0:
+                        ui.bet_number -= 1
+                        ui.update_bet_number(screen, ui.bet_number)
+                    # print("Minus button Pressed")
                 elif ui.confirm_bet_box.collidepoint(event.pos):
                     print("Confirm button Pressed")
-                    phase = 'done'
+                    if ui.bet_number <= game.money:
+                        phase = 'done'
+                    else:
+                        print("Not enough money to place bet")
             if phase == 'done' and not ui.animating_card:
                 running = False
                 # pygame.time.wait(1000)
@@ -260,7 +271,7 @@ class Main:
                                     self.game.say_to_player("Let's play some cards!")
                                     print(f"You are about to capture a {captured_piece.name}. Let's play Blackjack first!")
                                     
-                                    result = run_blackjack_ui(self.screen, dragger.piece.name, captured_piece.name, self.game.blackjack_ui)
+                                    result = run_blackjack_ui(self.screen, self.game, dragger.piece.name, captured_piece.name, self.game.blackjack_ui)
                                     # result = bj.play_round()
 
                                     print(f"Blackjack result: {result}")

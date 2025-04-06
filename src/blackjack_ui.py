@@ -16,6 +16,9 @@ class BlackjackUI:
         self.confirm_bet_box = pygame.Rect(10, HEIGHT - 85, 80, 75)
         self.plus_box = pygame.Rect(self.bet_box.x + 155, self.bet_box.y + 20, 20, 20)
         self.minus_box = pygame.Rect(self.bet_box.x + 155, self.bet_box.y + 37, 20, 20)
+        
+        self.betnumbertext = None
+        self.bet_number = 0
 
         self.player_hand = []
         self.dealer_hand = []
@@ -188,6 +191,11 @@ class BlackjackUI:
         screen.blit(minustext, (self.bet_box.x + 155, self.bet_box.y + 32))
         # pygame.draw.rect(screen, (255, 255, 255), self.plus_box, 1)
         # pygame.draw.rect(screen, (255, 255, 255), self.minus_box, 1)
+        
+        betnumberfont = pygame.font.SysFont('monospace', 50, bold=True)
+        self.betnumbertext = betnumberfont.render(str(self.bet_number), True, (255, 255, 255))
+        screen.blit(self.betnumbertext, (self.bet_box.x + 120, self.bet_box.y + 12))
+    
 
         if self.hit_img_rest and self.hit_img_push:
             image = self.hit_img_push if self.hit_pressed else self.hit_img_rest
@@ -229,3 +237,10 @@ class BlackjackUI:
             self.exit_button.centerx - exit_text.get_width() // 2,
             self.exit_button.centery - exit_text.get_height() // 2
         ))
+        
+        
+    def update_bet_number(self, screen, amount):
+        print("Updating bet number to:", amount)
+        betnumberfont = pygame.font.SysFont('monospace', 70, bold=True)
+        self.betnumbertext = betnumberfont.render(str(amount), True, (255, 255, 255))
+        screen.blit(self.betnumbertext, (self.bet_box.x + 120, self.bet_box.y + 12))    
