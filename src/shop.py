@@ -29,6 +29,12 @@ class Shop:
     def available_powerups(self):
         return self.powerups
     
+    def get_powerup(self, name):
+        for powerup in self.powerups:
+            if powerup.name.lower() == name.lower():
+                return powerup
+        return None
+    
     def is_available(self):
         return self.available 
     
@@ -116,13 +122,13 @@ class ShopUI:
             # pygame.draw.rect(surface, (255, 255, 255), left_button_rect, width=2, border_radius=5)
             # pygame.draw.rect(surface, (255, 255, 255), right_button_rect, width=2, border_radius=5)
         btn_offset = len(self.shop.available_upgrades())
-        powerup_title = subtitle_font.render("Power-Ups (DO NOT BUY)", True, (255, 255, 255))
+        powerup_title = subtitle_font.render("Power-Ups (NOT WORKING YET)", True, (255, 255, 255))
         surface.blit(powerup_title, (right_panel_x + 20, 340))
         pygame.draw.line(surface, (255, 255, 255), (right_panel_x + 20, 380), (right_panel_x + SIDE_PANEL_WIDTH - 20, 380), 2)
         for pup in self.shop.available_powerups():
             powerup_text = font.render(f"{pup.name}: ${pup.cost}", True, (9, 48, 78))
             amount_text = font.render(f"Qty: {pup.amount_left}", True, (247, 163, 19))
-            if self.button_greyed_img and pup.amount_left == 0:
+            if self.button_greyed_img and (pup.amount_left == 0 or pup.active):
                 surface.blit(self.button_greyed_img, (right_panel_x + 10, 395 + self.shop.available_powerups().index(pup) * 50))
                 surface.blit(powerup_text, (right_panel_x + 25, 402 + self.shop.available_powerups().index(pup) * 50))
             elif self.button_pressed_img and self.buttons_pressed[btn_offset + self.shop.available_powerups().index(pup)]:
@@ -204,10 +210,13 @@ class ShopUI:
                     self.buttons_pressed[i + len(self.shop.available_upgrades())] = True
                     if powerup.amount_left == 0:
                         print(f"{powerup.name} is out of stock.")
+                    elif powerup.active:
+                        print(f"{powerup.name} is already active.")
                     elif self.money >= powerup.cost:
                         self.money -= powerup.cost
-                        powerup.amount_left -= 1
+                        powerup.activate()
                         print(f"Purchased {powerup.name}. Remaining quantity: {powerup.amount_left}. Remaining money: {self.money}")
+                        print(f"{powerup.name} activated.") # Should have Burt say this
                     else:
                         print(f"Not enough money to purchase {powerup.name}.")
         

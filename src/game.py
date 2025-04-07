@@ -31,7 +31,7 @@ class Game:
         self.dragger = Dragger()
         self.config = Config()
         self.money = 100
-        self.shop = ShopUI(self.money)
+        self.shopui = ShopUI(self.money)
         self.ai = ChessAI(self.board)
         self.game_over = False
         self.blackjack_ui = BlackjackUI()
@@ -151,7 +151,7 @@ class Game:
         blackjack_text = title_font.render("Blackjack Burt", True, (211, 65, 21))
         surface.blit(blackjack_text, (123, 23))
 
-        self.shop.draw(surface)
+        self.shopui.draw(surface)
 
     # Various methods to handle game logic and player interactions
     
@@ -170,17 +170,17 @@ class Game:
         self.update_shop_money()
 
     def update_shop_money(self):
-        self.shop.set_money(self.money)
+        self.shopui.set_money(self.money)
             
     def update_game_money(self):
-        self.money = self.shop.get_money()
+        self.money = self.shopui.get_money()
     
     def get_luck(self):
-        luck_upgrade = self.shop.shop.available_upgrades()[0]
+        luck_upgrade = self.shopui.shop.available_upgrades()[0]
         return luck_upgrade.effect()
     
     def get_bounty(self):
-        bounty_upgrade = self.shop.shop.available_upgrades()[1]
+        bounty_upgrade = self.shopui.shop.available_upgrades()[1]
         return bounty_upgrade.effect()
 
     def next_turn(self):

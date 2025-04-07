@@ -191,6 +191,19 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
                     pygame.display.flip()
                     phase = 'done'
 
+        # Redo Powerup Logic (CURRENTLY DOESN"T START OVER HAND)
+        if game.shopui.shop.get_powerup("Redo").active and (winner == 'dealer' or winner == 'push'):
+            game.shopui.shop.get_powerup("Redo").deactivate()
+            game.money += betted_money
+            game.update_shop_money()
+            ui.bet_number = 0
+            ui.total_number = "0"
+            ui.dealer_number = "0"
+            ui.draw(screen)
+            pygame.display.flip()
+            print("Redo Powerup used!")
+            winner = None
+            phase = 'player'
         if phase == 'done' and not ui.animating_card:
             pygame.time.wait(1000)
             return winner
@@ -289,7 +302,7 @@ class Main:
 
             for event in pygame.event.get():
                 # Let blackjack panel handle its own input
-                game.shop.handle_event(event)  # Handle shop UI events
+                game.shopui.handle_event(event)  # Handle shop UI events
                 game.update_game_money()  # Update money in the shop
                 
 
