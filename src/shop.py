@@ -66,6 +66,9 @@ class ShopUI:
             image_path = os.path.join("assets", "images", "shop", "buttonPressed.png")
             self.button_pressed_img = pygame.image.load(image_path)
             self.button_pressed_img = pygame.transform.scale(self.button_pressed_img, (SIDE_PANEL_WIDTH - 220, 38))
+            image_path = os.path.join("assets", "images", "shop", "buttonGreyed.png")
+            self.button_greyed_img = pygame.image.load(image_path)
+            self.button_greyed_img = pygame.transform.scale(self.button_greyed_img, (SIDE_PANEL_WIDTH - 220, 38))
             self.luckPressed = False
             self.bountyPressed = False
         except Exception as e:
@@ -115,7 +118,9 @@ class ShopUI:
         for pup in self.shop.available_powerups():
             # print(f'index: {self.shop.available_powerups().index(pup)}')
             # print(f'pup: {pup}')
-            if self.button_pressed_img and self.buttons_pressed[btn_offset + self.shop.available_powerups().index(pup)]:
+            if self.button_greyed_img and pup.amount_left == 0:
+                surface.blit(self.button_greyed_img, (right_panel_x + 10, 195 + self.shop.available_powerups().index(pup) * 50))
+            elif self.button_pressed_img and self.buttons_pressed[btn_offset + self.shop.available_powerups().index(pup)]:
                 surface.blit(self.button_pressed_img, (right_panel_x + 10, 395 + self.shop.available_powerups().index(pup) * 50))  
             elif self.button_img:
                 surface.blit(self.button_img, (right_panel_x + 10, 395 + self.shop.available_powerups().index(pup) * 50))
