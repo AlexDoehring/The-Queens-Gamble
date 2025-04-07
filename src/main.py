@@ -18,9 +18,8 @@ import time
 # The function also handles the animation of cards being dealt and the display of the player's and dealer's hands.
 # It uses the Pygame library for rendering and event handling.
 
-def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
+def run_blackjack_ui(screen, game, player_piece, dealer_piece, ui):
     bj_game = BlackjackGame()
-    ui = blackjack_ui
     ui.reveal_dealer_second = False
 
     bj_game.start_round(player_piece, dealer_piece)
@@ -183,6 +182,8 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
                         winner = 'dealer'
                     else:
                         winner = 'push'
+                        game.money += betted_money
+                        game.update_shop_money()
                     pygame.time.wait(2000)
                     ui.bet_number = 0
                     ui.total_number = "0"
@@ -191,19 +192,14 @@ def run_blackjack_ui(screen, game, player_piece, dealer_piece, blackjack_ui):
                     pygame.display.flip()
                     phase = 'done'
 
-        # Redo Powerup Logic (CURRENTLY DOESN"T START OVER HAND)
+        # Redo Powerup Logic
         if game.shopui.shop.get_powerup("Redo").active and (winner == 'dealer' or winner == 'push'):
             game.shopui.shop.get_powerup("Redo").deactivate()
             game.money += betted_money
             game.update_shop_money()
-            ui.bet_number = 0
-            ui.total_number = "0"
-            ui.dealer_number = "0"
-            ui.draw(screen)
-            pygame.display.flip()
+            game.say_to_player("I'll let you try that again...")
             print("Redo Powerup used!")
-            winner = None
-            phase = 'player'
+            return run_blackjack_ui(screen, game, player_piece, dealer_piece, ui)
         if phase == 'done' and not ui.animating_card:
             pygame.time.wait(1000)
             return winner
