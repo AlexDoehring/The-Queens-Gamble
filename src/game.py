@@ -30,7 +30,7 @@ class Game:
         self.board = Board()
         self.dragger = Dragger()
         self.config = Config()
-        self.money = 100
+        self.money = 15
         self.shop = ShopUI(self.money)
         self.ai = ChessAI(self.board)
         self.game_over = False
