@@ -97,14 +97,18 @@ class ShopUI:
         pygame.draw.line(surface, (255, 255, 255), (right_panel_x + 20, 180), (right_panel_x + SIDE_PANEL_WIDTH - 20, 180), 2)
         
         for upgrade in self.shop.available_upgrades():
-            if self.button_pressed_img and self.buttons_pressed[self.shop.available_upgrades().index(upgrade)]:
-                surface.blit(self.button_pressed_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 50))  
-            elif self.button_img:
-                surface.blit(self.button_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 50))              
             upgrade_text = font.render(f"{upgrade.name}: ${upgrade.cost}", True, (9, 48, 78))
             level_text = font.render(f"Lvl: {upgrade.level}", True, (247, 163, 19))
+            if self.button_greyed_img and upgrade.level == 5:
+                surface.blit(self.button_greyed_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 50))
+                surface.blit(upgrade_text, (right_panel_x + 25, 202 + self.shop.available_upgrades().index(upgrade) * 50))
+            elif self.button_pressed_img and self.buttons_pressed[self.shop.available_upgrades().index(upgrade)]:
+                surface.blit(self.button_pressed_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 50))
+                surface.blit(upgrade_text, (right_panel_x + 25, 202 + self.shop.available_upgrades().index(upgrade) * 50))
+            elif self.button_img:
+                surface.blit(self.button_img, (right_panel_x + 10, 195 + self.shop.available_upgrades().index(upgrade) * 50))
+                surface.blit(upgrade_text, (right_panel_x + 25, 200 + self.shop.available_upgrades().index(upgrade) * 50))
             surface.blit(level_text, (right_panel_x + 240, 200 + self.shop.available_upgrades().index(upgrade) * 50))
-            surface.blit(upgrade_text, (right_panel_x + 25, 200 + self.shop.available_upgrades().index(upgrade) * 50))
             left_button_rect = pygame.Rect(right_panel_x + 15, 195 + self.shop.available_upgrades().index(upgrade) * 50, SIDE_PANEL_WIDTH - 230, 35)
             self.upgrade_buttons.append(left_button_rect)
             
@@ -116,18 +120,18 @@ class ShopUI:
         surface.blit(powerup_title, (right_panel_x + 20, 340))
         pygame.draw.line(surface, (255, 255, 255), (right_panel_x + 20, 380), (right_panel_x + SIDE_PANEL_WIDTH - 20, 380), 2)
         for pup in self.shop.available_powerups():
-            # print(f'index: {self.shop.available_powerups().index(pup)}')
-            # print(f'pup: {pup}')
-            if self.button_greyed_img and pup.amount_left == 0:
-                surface.blit(self.button_greyed_img, (right_panel_x + 10, 195 + self.shop.available_powerups().index(pup) * 50))
-            elif self.button_pressed_img and self.buttons_pressed[btn_offset + self.shop.available_powerups().index(pup)]:
-                surface.blit(self.button_pressed_img, (right_panel_x + 10, 395 + self.shop.available_powerups().index(pup) * 50))  
-            elif self.button_img:
-                surface.blit(self.button_img, (right_panel_x + 10, 395 + self.shop.available_powerups().index(pup) * 50))
             powerup_text = font.render(f"{pup.name}: ${pup.cost}", True, (9, 48, 78))
             amount_text = font.render(f"Qty: {pup.amount_left}", True, (247, 163, 19))
+            if self.button_greyed_img and pup.amount_left == 0:
+                surface.blit(self.button_greyed_img, (right_panel_x + 10, 395 + self.shop.available_powerups().index(pup) * 50))
+                surface.blit(powerup_text, (right_panel_x + 25, 402 + self.shop.available_powerups().index(pup) * 50))
+            elif self.button_pressed_img and self.buttons_pressed[btn_offset + self.shop.available_powerups().index(pup)]:
+                surface.blit(self.button_pressed_img, (right_panel_x + 10, 395 + self.shop.available_powerups().index(pup) * 50))  
+                surface.blit(powerup_text, (right_panel_x + 25, 402 + self.shop.available_powerups().index(pup) * 50))
+            elif self.button_img:
+                surface.blit(self.button_img, (right_panel_x + 10, 395 + self.shop.available_powerups().index(pup) * 50))
+                surface.blit(powerup_text, (right_panel_x + 25, 400 + self.shop.available_powerups().index(pup) * 50))
             surface.blit(amount_text, (right_panel_x + 240, 400 + self.shop.available_powerups().index(pup) * 50))
-            surface.blit(powerup_text, (right_panel_x + 25, 400 + self.shop.available_powerups().index(pup) * 50))
             left_button_rect = pygame.Rect(right_panel_x + 15, 395 + self.shop.available_powerups().index(pup) * 50, SIDE_PANEL_WIDTH - 230, 35)
             self.powerup_buttons.append(left_button_rect)
 
